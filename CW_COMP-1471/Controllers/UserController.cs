@@ -15,10 +15,7 @@ namespace CW_COMP_1471.Views.Home
         // Show Add User Form
         public ActionResult CreateUser()
         {
-            var model = new User
-            {
-                Roles = new SelectList(RoleService.GetRoles(), "Id", "RoleName")
-            };
+            var model = new User();
             return View(model);
         }
 
@@ -32,7 +29,6 @@ namespace CW_COMP_1471.Views.Home
                                               .Select(e => e.ErrorMessage)
                                               .ToList();
                 ViewBag.Errors = errors;
-                user.Roles = new SelectList(RoleService.GetRoles(), "Id", "RoleName");
                 return View("CreateUser", user);
             }
 

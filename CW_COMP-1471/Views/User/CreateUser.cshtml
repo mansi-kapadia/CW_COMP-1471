@@ -1,4 +1,5 @@
-﻿@model User
+﻿@using CW_COMP_1471.Services
+@model User
 
 @{
     ViewBag.Title = "Add User";
@@ -67,7 +68,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Role</label>
-                    @Html.DropDownListFor(m => m.RoleId, Model.Roles, "Select a Role", new { @class = "form-control" })
+                    @Html.DropDownListFor(m => m.RoleId, new SelectList(RoleService.GetRoles(), "Id", "RoleName"), "Select a Role", new { @class = "form-control" })
                 </div>
             </div>
         </div>
