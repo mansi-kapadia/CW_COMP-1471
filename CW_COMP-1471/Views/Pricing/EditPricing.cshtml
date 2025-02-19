@@ -1,36 +1,42 @@
-﻿@model Role
+﻿@model Pricing
 
 @{
-    ViewBag.Title = "Update Role";
+    ViewBag.Title = "Update Pricing";
 }
 
-<h2 class="mb-4">Add Role</h2>
+<h2 class="mb-4">Update Pricing</h2>
 
-@using (Html.BeginForm("Edit", "Role", FormMethod.Post))
+@using (Html.BeginForm("Edit", "Pricing", FormMethod.Post))
 {
     <div class="container">
         <div class="row">
-            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.Pricingid)
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Name</label>
-                    @Html.TextBoxFor(m => m.RoleName, new { @class = "form-control", placeholder = "Enter Role Name" })
+                    <label>Band</label>
+                    @Html.TextBoxFor(m => m.Band, new { @class = "form-control", placeholder = "Enter Band Name" })
                 </div>
             </div>
            <div class="col-md-6">
                 <div class="form-group">
-                    <label>Active</label>
-                    <div class="form-check">
-                        @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
-                        <label class="form-check-label">Yes</label>
-                    </div>
+                    <label>Price</label>
+                    @Html.TextBoxFor(m => m.Price, new { @class = "form-control", placeholder = "Enter Band Price" })
                 </div>
             </div>
         </div>
        
+         <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Play</label>
+                    @Html.DropDownListFor(m => m.PlayId, Model.plays, "Select a Play", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
         <div class="row mt-4">
             <div class="col-md-12 text-center">
-                <button type="submit" class="btn btn-success btn-lg">Update Role</button>
+                <button type="submit" class="btn btn-success btn-lg">Add Price Band</button>
             </div>
         </div>
     </div>

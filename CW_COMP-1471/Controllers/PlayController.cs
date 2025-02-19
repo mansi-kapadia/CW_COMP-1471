@@ -27,7 +27,7 @@ namespace CW_COMP_1471.Controllers
                                               .Select(e => e.ErrorMessage)
                                               .ToList();
                 ViewBag.Errors = errors;
-                return View("Create Play", Play);
+                return View("CreatePlay", Play);
             }
 
             PlayService.Add(Play);
@@ -51,12 +51,16 @@ namespace CW_COMP_1471.Controllers
         [HttpPost]
         public ActionResult Edit(Play Play)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                PlayService.Update(Play);
-                return RedirectToAction("Index");
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                ViewBag.Errors = errors;
+                return View("EditPlay", Play);
             }
-            return View(Play);
+            PlayService.Update(Play);
+            return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)

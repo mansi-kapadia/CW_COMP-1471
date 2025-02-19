@@ -39,5 +39,14 @@ namespace CW_COMP_1471.Services
                 Pricing.PlayId = updatedPricing.PlayId;
             }
         }
+
+        public static void Delete(int id)
+        {
+            var band = Pricings.FirstOrDefault(u => u.Pricingid == id);
+            if (band != null)
+            {
+                Pricings.Remove(band);
+            }
+        }
     }
 }
