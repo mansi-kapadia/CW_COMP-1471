@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Role>
+
+@{
+    ViewBag.Title = "Role List";
+}
+
+<h2>Roles</h2>
+
+<a href="@Url.Action("CreateRole", "Role")" class="btn btn-primary">Add Role</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>IsActive</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Id</td>
+                <td>@role.RoleName</td>
+                <td>@role.IsActive</td>
+                <td>
+                    <a href="@Url.Action("EditRole", "Role", new { id = role.Id })" class="btn btn-warning">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

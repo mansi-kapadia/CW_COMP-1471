@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Pricing>
+
+@{
+    ViewData["Title"] = "Pricing List";
+}
+
+<h2>Pricing List</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Band</th>
+            <th>Price</th>
+            <th>Play ID</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pricing in Model)
+        {
+            <tr>
+                <td>@pricing.Band</td>
+                <td>@pricing.Price</td>
+                <td>@pricing.PlayId</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@pricing.Pricingid" class="btn btn-primary">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@pricing.Pricingid" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="CreatePricing" class="btn btn-success">Create New Pricing</a>

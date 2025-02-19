@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Play>
+
+@{
+    ViewData["Title"] = "Play List";
+}
+
+<h2>Play List</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Description</th>
+            <th>Date and Time</th>
+            <th>Play Type</th>
+            <th>Created By</th>
+            <th>Created Date</th>
+            <th>Package ID</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var play in Model)
+        {
+            <tr>
+                <td>@play.Title</td>
+                <td>@play.Genre</td>
+                <td>@play.Description</td>
+                <td>@play.Dateandtime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@play.Playtype</td>
+                <td>@if (play.CreatedbyUser != null)
+                {
+                    @play.CreatedbyUser.FirstName
+                }</td>
+                <td>@play.Createddate.ToString("yyyy-MM-dd")</td>
+                 <td>@if (play.CreatedbyUser != null)
+                {
+                    @play.Package.Name
+                }</td>
+                <td>
+                    <a asp-action="EditPlay" asp-route-id="@play.Playid" class="btn btn-primary">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@play.Playid" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="CreatePlay" class="btn btn-success">Create New Play</a>

@@ -1,0 +1,58 @@
+﻿@model Play
+
+@{
+    ViewBag.Title = "Update Play";
+}
+
+<h2 class="mb-4">Add Play</h2>
+
+@using (Html.BeginForm("Edit", "Play", FormMethod.Post))
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                @Html.HiddenFor(m => m.Playid)
+                <div class="form-group">
+                    <label>Title</label>
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Enter Play Title" })
+                </div>
+                <div class="form-group">
+                    <label>Genre</label>
+                    @Html.TextBoxFor(m => m.Genre, new { @class = "form-control", placeholder = "Enter Genre" })
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = "Enter Description", rows = 3 })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Date and Time</label>
+                    @Html.TextBoxFor(m => m.Dateandtime, new { @class = "form-control", type = "datetime-local" })
+                </div>
+                <div class="form-group">
+                    <label>Play Type</label>
+                    @Html.TextBoxFor(m => m.Playtype, new { @class = "form-control", placeholder = "Enter Play Type" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-success btn-lg">Update Play</button>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Errors != null)
+    {
+        <div class="alert alert-danger mt-3">
+            <ul>
+                @foreach (var error in ViewBag.Errors)
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        </div>
+    }
+}
