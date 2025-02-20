@@ -1,0 +1,28 @@
+﻿@model CW_COMP_1471.Models.Package
+
+@{
+    ViewData["Title"] = "Create Package";
+}
+
+<h2>Create Package</h2>
+
+<form asp-action="Create" method="post">
+    <div class="row">
+        <div class="form-group">
+            <label>Name</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label>Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12 text-center">
+            <button type="submit" class="btn btn-success">Save</button>
+        </div>
+    </div>
+</form>

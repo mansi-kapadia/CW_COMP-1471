@@ -1,0 +1,53 @@
+﻿@model Discount
+
+@{
+    ViewBag.Title = "Add Discount";
+}
+
+<h2 class="mb-4">Add Discount</h2>
+
+@using (Html.BeginForm("Create", "Discount", FormMethod.Post))
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Code</label>
+                    @Html.TextBoxFor(m => m.Code, new { @class = "form-control", placeholder = "Enter Discount Code" })
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = "Enter Description", rows = 3 })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Discount Amount</label>
+                    @Html.TextBoxFor(m => m.DiscountAmount, new { @class = "form-control", type = "number", placeholder = "Enter Discount Amount" })
+                </div>
+                <div class="form-group">
+                    <label>Expiry Date</label>
+                    @Html.TextBoxFor(m => m.ExpiryDate, new { @class = "form-control", type = "date" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-success btn-lg">Add Discount</button>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Errors != null)
+    {
+        <div class="alert alert-danger mt-3">
+            <ul>
+                @foreach (var error in ViewBag.Errors)
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        </div>
+    }
+}

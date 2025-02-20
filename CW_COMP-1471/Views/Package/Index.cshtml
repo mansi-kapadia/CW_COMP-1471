@@ -1,0 +1,31 @@
+﻿@model IEnumerable<CW_COMP_1471.Models.Package>
+
+@{
+    ViewData["Title"] = "Package List";
+}
+
+<h2>Package List</h2>
+<a asp-action="CreatePackage" class="btn btn-success mb-3">Create New Package</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var package in Model)
+        {
+            <tr>
+                <td>@package.Name</td>
+                <td>@package.Description</td>
+                <td>
+                    <a asp-action="EditPackage" asp-route-id="@package.PackageId" class="btn btn-primary">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@package.PackageId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

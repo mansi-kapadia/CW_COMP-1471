@@ -23,25 +23,37 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">User</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Play" asp-action="Index">Plays</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pricing" asp-action="Index">Pricing</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Pricing" asp-action="Index">Pricings</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Discount" asp-action="Index">Discounts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Package" asp-action="Index">Packages</a>
+                        </li>
                     </ul>
+                    
+                    <!-- 🛒 Cart Button -->
+                    <a class="btn btn-outline-primary position-relative" asp-controller="Cart" asp-action="Index">
+                        🛒 Cart 
+                        <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            0
+                        </span>
+                    </a>
                 </div>
             </div>
         </nav>
     </header>
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -53,9 +65,25 @@
             &copy; 2025 - CW_COMP_1471 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script>
+        function updateCartCount(count) {
+            document.getElementById("cartCount").innerText = count;
+        }
+
+        let cartItems = 0;
+        
+        function addToCart(playId) {
+            cartItems++;
+            updateCartCount(cartItems);
+            alert("Added to Cart! Current Items: " + cartItems);
+        }
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
