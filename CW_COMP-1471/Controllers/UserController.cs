@@ -3,22 +3,35 @@ using CW_COMP_1471.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace CW_COMP_1471.Views.Home
+namespace CW_COMP_1471.Controllers
 {
     public class UserController : Controller
     {
+        private static IUserService userService;
+        private static IRoleService roleService;
+
+        public UserController(IUserService _userService, IRoleService _roleService)
+        {
+            userService = _userService; 
+            roleService = _roleService;
+        }
+
         public IActionResult Index()
         {
-            return View(UserServices.GetUsers());
+            return View(userService.GetUsers());
         }
 
         // Show Add User Form
         public ActionResult CreateUser()
         {
-            var model = new User();
+            //var model = new User();
+            //model.Roles = new SelectList(roleService.GetRoles(), "Id", "RoleName");
+            var model = new User
+            {
+                Roles = new SelectList(roleService.GetRoles() ?? new List<Role>(), "Id", "RoleName")
+            };
             return View(model);
         }
-
 
         [HttpPost]
         public ActionResult Create(User user)
@@ -32,16 +45,18 @@ namespace CW_COMP_1471.Views.Home
                 return View("CreateUser", user);
             }
 
-            UserServices.AddUser(user);
+            userService.AddUser(user);
             return RedirectToAction("Index");
         }
         
         public ActionResult EditUser(int id)
         {
-            ViewBag.Roles = new SelectList(RoleService.GetRoles(), "Id", "RoleName");
-            var user = UserServices.GetUserById(id);
+            var user = userService.GetUserById(id);
+            
             if (user == null)
                 return HttpNotFound();
+
+            user.Roles = new SelectList(roleService.GetRoles() ?? new List<Role>(), "Id", "RoleName");
 
             return View(user);
         }
@@ -56,7 +71,7 @@ namespace CW_COMP_1471.Views.Home
         {
             if (ModelState.IsValid)
             {
-                UserServices.UpdateUser(user);
+                userService.UpdateUser(user);
                 return RedirectToAction("Index");
             }
             return View(user);
@@ -64,7 +79,7 @@ namespace CW_COMP_1471.Views.Home
 
         public ActionResult Delete(int id)
         {
-            UserServices.DeleteUser(id);
+            userService.DeleteUser(id);
             return RedirectToAction("Index");
         }
     }

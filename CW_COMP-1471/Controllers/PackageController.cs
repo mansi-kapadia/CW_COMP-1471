@@ -6,9 +6,15 @@ namespace CW_COMP_1471.Controllers
 {
     public class PackageController : Controller
     {
+        private static IPackageService packageService;
+        public PackageController(IPackageService _packageService)
+        {
+            packageService = _packageService;
+        }
+
         public IActionResult Index()
         {
-            var packages = PackageService.GetAllPackages();
+            var packages = packageService.GetAllPackages();
             return View(packages);
         }
 
@@ -22,7 +28,7 @@ namespace CW_COMP_1471.Controllers
         {
             if (ModelState.IsValid)
             {
-                PackageService.Add(package);
+                packageService.Add(package);
                 return RedirectToAction("Index");
             }
             return View(package);
@@ -30,7 +36,7 @@ namespace CW_COMP_1471.Controllers
 
         public IActionResult EditPackage(int id)
         {
-            var package = PackageService.GetById(id);
+            var package = packageService.GetById(id);
             if (package == null)
                 return NotFound();
 
@@ -42,7 +48,7 @@ namespace CW_COMP_1471.Controllers
         {
             if (ModelState.IsValid)
             {
-                PackageService.Update(package);
+                packageService.Update(package);
                 return RedirectToAction("Index");
             }
             return View(package);
@@ -50,11 +56,11 @@ namespace CW_COMP_1471.Controllers
 
         public IActionResult Delete(int id)
         {
-            var package = PackageService.GetById(id);
+            var package = packageService.GetById(id);
             if (package == null)
                 return NotFound();
 
-            PackageService.DeletePackage(id);
+            packageService.DeletePackage(id);
             return RedirectToAction("Index");
         }
        

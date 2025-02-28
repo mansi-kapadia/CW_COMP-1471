@@ -7,9 +7,16 @@ namespace CW_COMP_1471.Controllers
 {
     public class RoleController : Controller
     {
+        private static IRoleService roleService;
+
+        public RoleController(IRoleService _roleService)
+        {
+            roleService = _roleService;
+        }
+
         public ActionResult Index()
         {
-            return View(RoleService.GetRoles());
+            return View(roleService.GetRoles());
         }
 
         // Show Add User Form
@@ -31,13 +38,13 @@ namespace CW_COMP_1471.Controllers
                 return View("CreateRole", role);
             }
 
-            RoleService.Add(role);
+            roleService.Add(role);
             return RedirectToAction("Index");
         }
 
         public ActionResult EditRole(int id)
         {
-            var role = RoleService.GetById(id);
+            var role = roleService.GetById(id);
             if (role == null)
                 return HttpNotFound();
 
@@ -54,7 +61,7 @@ namespace CW_COMP_1471.Controllers
         {
             if (ModelState.IsValid)
             {
-                RoleService.Update(role);
+                roleService.Update(role);
                 return RedirectToAction("Index");
             }
             return View(role);

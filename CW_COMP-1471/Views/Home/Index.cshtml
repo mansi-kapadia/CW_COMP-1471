@@ -20,8 +20,8 @@
                         <p><strong>Play Type:</strong> @play.Playtype</p>
                         
                         <div class="form-group">
-                            <label for="pricingBand-@play.Playid"><strong>Pricing Band</strong></label>
-                            <select id="pricingBand-@play.Playid" class="form-control">
+                            <label for="pricingBand-@play.PlayId"><strong>Pricing Band</strong></label>
+                            <select id="pricingBand-@play.PlayId" class="form-control">
                                 <option value="Economy">Economy</option>
                                 <option value="Standard">Standard</option>
                                 <option value="Premium">Premium</option>
@@ -30,11 +30,11 @@
 
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <div class="input-group" style="width: 120px;">
-                                <button class="btn btn-outline-secondary" type="button" onclick="decrement(@play.Playid)">-</button>
-                                <input type="text" id="ticketCount-@play.Playid" class="form-control text-center" value="1" readonly />
-                                <button class="btn btn-outline-secondary" type="button" onclick="increment(@play.Playid)">+</button>
+                                <button class="btn btn-outline-secondary" type="button" onclick="decrement(@play.PlayId)">-</button>
+                                <input type="text" id="ticketCount-@play.PlayId" class="form-control text-center" value="1" readonly />
+                                <button class="btn btn-outline-secondary" type="button" onclick="increment(@play.PlayId)">+</button>
                             </div>
-                            <button class="btn btn-primary" onclick="addToCart(@play.Playid)">Add to Cart</button>
+                            <button class="btn btn-primary" onclick="addToCart(@play.PlayId)">Add to Cart</button>
                         </div>
                     </div>
                 </div>
@@ -44,27 +44,27 @@
 </div>
 
 <script>
-    function increment(playId) {
-        var input = document.getElementById("ticketCount-" + playId);
+    function increment(PlayId) {
+        var input = document.getElementById("ticketCount-" + PlayId);
         var value = parseInt(input.value);
         if (value < 10) { // Limit max tickets to 10
             input.value = value + 1;
         }
     }
 
-    function decrement(playId) {
-        var input = document.getElementById("ticketCount-" + playId);
+    function decrement(PlayId) {
+        var input = document.getElementById("ticketCount-" + PlayId);
         var value = parseInt(input.value);
         if (value > 1) { // Prevent going below 1
             input.value = value - 1;
         }
     }
 
-    function addToCart(playId) {
-        var count = document.getElementById("ticketCount-" + playId).value;
-        var pricingBand = document.getElementById("pricingBand-" + playId).value;
+    function addToCart(PlayId) {
+        var count = document.getElementById("ticketCount-" + PlayId).value;
+        var pricingBand = document.getElementById("pricingBand-" + PlayId).value;
 
         // Send data to the server (can be integrated with AJAX for real-time cart updates)
-        alert(`Added ${count} tickets for Play ID ${playId} with ${pricingBand} pricing to cart!`);
+        alert(`Added ${count} tickets for Play ID ${PlayId} with ${pricingBand} pricing to cart!`);
     }
 </script>

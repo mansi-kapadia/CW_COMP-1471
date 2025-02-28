@@ -7,28 +7,28 @@ namespace CW_COMP_1471.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private static IPlayService playService;
+        public HomeController(IPlayService _playService, ILogger<HomeController> logger)
         {
+            playService = _playService;
             _logger = logger;
         }
 
-        //private static List<Ticket> Cart = new List<Ticket>();
+        private readonly ILogger<HomeController> _logger;
 
         public IActionResult Index()
         {
-            var plays = PlayService.GetAllPlays(); // Fetches list of plays
+            var plays = playService.GetAllPlays(); // Fetches list of plays
             return View(plays);
         }
 
-        //public IActionResult AddToCart(int playId)
+        //public IActionResult AddToCart(int PlayId)
         //{
-        //    var play = PlayService.GetById(playId);
+        //    var play = PlayService.GetById(PlayId);
         //    if (play == null)
         //        return NotFound();
 
-        //    var ticket = new Ticket { PlayId = playId, Play = play };
+        //    var ticket = new Ticket { PlayId = PlayId, Play = play };
         //    return View(ticket);
         //}
 

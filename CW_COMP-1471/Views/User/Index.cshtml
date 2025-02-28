@@ -30,7 +30,7 @@
                 <td>@user.Email</td>
                 <td>@user.PhoneNumber</td>
                 <td>@user.Address</td>
-                <td>@RoleService.GetById(user.RoleId).RoleName</td>
+                @*<td>@user.Role.RoleName</td>*@
                 <td>
                     <a href="@Url.Action("EditUser", "User", new { id = user.Id })" class="btn btn-warning">Edit</a>
                     <a href="@Url.Action("Delete", "User", new { id = user.Id })" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>

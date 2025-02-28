@@ -6,9 +6,16 @@ namespace CW_COMP_1471.Controllers
 {
     public class PlayController : Controller
     {
+        private static IPlayService playService;
+
+        public PlayController(IPlayService _playService)
+        {
+            playService = _playService;
+        }
+
         public IActionResult Index()
         {
-            return View(PlayService.GetAllPlays());
+            return View(playService.GetAllPlays());
         }
 
         // Show Add Play Form
@@ -30,13 +37,13 @@ namespace CW_COMP_1471.Controllers
                 return View("CreatePlay", Play);
             }
 
-            PlayService.Add(Play);
+            playService.Add(Play);
             return RedirectToAction("Index");
         }
 
         public ActionResult EditPlay(int id)
         {
-            var Play = PlayService.GetById(id);
+            var Play = playService.GetById(id);
             if (Play == null)
                 return HttpNotFound();
 
@@ -59,13 +66,13 @@ namespace CW_COMP_1471.Controllers
                 ViewBag.Errors = errors;
                 return View("EditPlay", Play);
             }
-            PlayService.Update(Play);
+            playService.Update(Play);
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)
         {
-            PlayService.DeletePlay(id);
+            playService.DeletePlay(id);
             return RedirectToAction("Index");
         }
     }

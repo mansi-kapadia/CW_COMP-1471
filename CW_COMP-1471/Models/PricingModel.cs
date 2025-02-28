@@ -1,15 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CW_COMP_1471.Models
 {
+    [Table("pricings")]
     public class Pricing
     {
         [Key]
+        [Column("pricingid")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Pricingid { get; set; }
+
+        [Required]
+        [Column("band")]
+        [StringLength(50)]
         public string Band { get; set; }
+
+        [Required]
+        [Column("price", TypeName = "numeric(10,2)")]
         public double Price { get; set; }
+
+        [Required]
+        [Column("playid")]
         public int PlayId { get; set; }
-        public SelectList? plays { get; set; }
+
+        [NotMapped]
+        public SelectList? Plays { get; set; }
     }
 }

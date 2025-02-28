@@ -6,9 +6,15 @@ namespace CW_COMP_1471.Controllers
 {
     public class DiscountController : Controller
     {
+        private static IDiscountService discountService;
+        public DiscountController(IDiscountService _discountService)
+        {
+            discountService = _discountService;
+        }
+
         public IActionResult Index()
         {
-            return View(DiscountService.GetAllDiscounts());
+            return View(discountService.GetAllDiscounts());
         }
 
         public ActionResult CreateDiscount()
@@ -25,13 +31,13 @@ namespace CW_COMP_1471.Controllers
                 return View("CreateDiscount", discount);
             }
 
-            DiscountService.Add(discount);
+            discountService.Add(discount);
             return RedirectToAction("Index");
         }
 
         public ActionResult EditDiscount(int id)
         {
-            var discount = DiscountService.GetById(id);
+            var discount = discountService.GetById(id);
             if (discount == null)
                 return NotFound();
 
@@ -47,13 +53,13 @@ namespace CW_COMP_1471.Controllers
                 return View("EditDiscount", discount);
             }
 
-            DiscountService.Update(discount);
+            discountService.Update(discount);
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)
         {
-            DiscountService.DeleteDiscount(id);
+            discountService.DeleteDiscount(id);
             return RedirectToAction("Index");
         }
     }

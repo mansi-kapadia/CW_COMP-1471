@@ -1,61 +1,60 @@
 ﻿using CW_COMP_1471.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CW_COMP_1471.Services
 {
-    public class PlayService
+    public class PlayService : IPlayService
     {
-        private static List<Play> plays = new List<Play>
-        {
-            new Play { Playid = 1, Title = "Hamlet", Genre = "Tragedy", Description = "A Shakespearean classic", Dateandtime = DateTime.Now.AddDays(1), Playtype = "Drama", Createdby = 101, Createddate = DateTime.Now, PackageId = 1 },
-            new Play { Playid = 2, Title = "Macbeth", Genre = "Tragedy", Description = "A story of ambition and fate", Dateandtime = DateTime.Now.AddDays(2), Playtype = "Drama", Createdby = 102, Createddate = DateTime.Now, PackageId = 2 },
-            new Play { Playid = 3, Title = "Othello", Genre = "Tragedy", Description = "A tale of jealousy and betrayal", Dateandtime = DateTime.Now.AddDays(3), Playtype = "Drama", Createdby = 103, Createddate = DateTime.Now, PackageId = 3 },
-            new Play { Playid = 4, Title = "Romeo and Juliet", Genre = "Romance", Description = "A tragic love story", Dateandtime = DateTime.Now.AddDays(4), Playtype = "Drama", Createdby = 104, Createddate = DateTime.Now, PackageId = 4 },
-            new Play { Playid = 5, Title = "Julius Caesar", Genre = "Historical", Description = "A tale of betrayal and power", Dateandtime = DateTime.Now.AddDays(5), Playtype = "Drama", Createdby = 105, Createddate = DateTime.Now, PackageId = 5 },
-            new Play { Playid = 6, Title = "A Midsummer Night's Dream", Genre = "Comedy", Description = "A whimsical romantic comedy", Dateandtime = DateTime.Now.AddDays(6), Playtype = "Drama", Createdby = 106, Createddate = DateTime.Now, PackageId = 6 },
-            new Play { Playid = 7, Title = "The Tempest", Genre = "Fantasy", Description = "A magical and adventurous story", Dateandtime = DateTime.Now.AddDays(7), Playtype = "Drama", Createdby = 107, Createddate = DateTime.Now, PackageId = 7 },
-            new Play { Playid = 8, Title = "Death of a Salesman", Genre = "Drama", Description = "A critique of the American Dream", Dateandtime = DateTime.Now.AddDays(8), Playtype = "Theater", Createdby = 108, Createddate = DateTime.Now, PackageId = 8 },
-            new Play { Playid = 9, Title = "The Crucible", Genre = "Historical Drama", Description = "A play based on the Salem witch trials", Dateandtime = DateTime.Now.AddDays(9), Playtype = "Theater", Createdby = 109, Createddate = DateTime.Now, PackageId = 9 },
-        };
+        private readonly ApplicationDbContext _context;
 
-        public static IEnumerable<Play> GetAllPlays()
+        public PlayService(ApplicationDbContext context)
         {
-            return plays;
+            _context = context;
         }
 
-        public static void Add(Play play)
+        public IEnumerable<Play> GetAllPlays()
         {
-            plays.Add(play);
+            return _context.Plays.ToList();
         }
 
-        public static Play GetById(int id)
+        public Play? GetById(int id)
         {
-            return plays.FirstOrDefault(p => p.Playid == id);
+            return _context.Plays.Find(id);
         }
 
-        public static void Update(Play play)
+        public void Add(Play play)
         {
-            var existingPlay = GetById(play.Playid);
+            play.Dateandtime = play.Dateandtime.ToUniversalTime();
+            _context.Plays.Add(play);
+            _context.SaveChanges();
+        }
+
+        public void Update(Play play)
+        {
+            var existingPlay = _context.Plays.Find(play.PlayId);
             if (existingPlay != null)
             {
                 existingPlay.Title = play.Title;
                 existingPlay.Genre = play.Genre;
                 existingPlay.Description = play.Description;
-                existingPlay.Dateandtime = play.Dateandtime;
+                existingPlay.Dateandtime = play.Dateandtime.ToUniversalTime(); ;
                 existingPlay.Playtype = play.Playtype;
-                existingPlay.Createdby = play.Createdby;
-                existingPlay.Createddate = play.Createddate;
                 existingPlay.PackageId = play.PackageId;
+
+                _context.SaveChanges();
             }
         }
 
-        public static void DeletePlay(int id)
+        public void DeletePlay(int id)
         {
-            var play = GetById(id);
+            var play = _context.Plays.Find(id);
             if (play != null)
             {
-                plays.Remove(play);
+                _context.Plays.Remove(play);
+                _context.SaveChanges();
             }
         }
     }
-
 }

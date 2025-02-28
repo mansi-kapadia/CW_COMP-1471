@@ -5,51 +5,51 @@ using System.Linq;
 
 namespace CW_COMP_1471.Services
 {
-    public static class PackageService
+    public class PackageService : IPackageService
     {
-        private static List<Package> Packages = new List<Package>
+        private readonly ApplicationDbContext _context;
+
+        public PackageService(ApplicationDbContext context)
         {
-            new Package
-            {
-                PackageId = 1,
-                Name = "Premium Package",
-                Description = "Includes VIP seating and backstage access.",
-            },
-            new Package
-            {
-                PackageId = 2,
-                Name = "Standard Package",
-                Description = "Standard seating with complimentary drinks.",
-            },
-            new Package
-            {
-                PackageId = 3,
-                Name = "Basic Package",
-                Description = "Affordable package with general seating.",
-            }
-        };
-
-        public static List<Package> GetAllPackages() => Packages;
-
-        public static Package? GetById(int id) => Packages.FirstOrDefault(p => p.PackageId == id);
-
-        public static void Add(Package package)
-        {
-            package.PackageId = Packages.Max(p => p.PackageId) + 1;
-            Packages.Add(package);
+            _context = context;
         }
 
-        public static void Update(Package updatedPackage)
+        public List<Package> GetAllPackages()
         {
-            var package = GetById(updatedPackage.PackageId);
+            return _context.Packages.ToList();
+        }
+
+        public Package? GetById(int id)
+        {
+            return _context.Packages.FirstOrDefault(p => p.PackageId == id);
+        }
+
+        public void Add(Package package)
+        {
+            _context.Packages.Add(package);
+            _context.SaveChanges();
+        }
+
+        public void Update(Package updatedPackage)
+        {
+            var package = _context.Packages.Find(updatedPackage.PackageId);
             if (package != null)
             {
                 package.Name = updatedPackage.Name;
                 package.Description = updatedPackage.Description;
-                //package.PricingId = updatedPackage.PricingId;
+                //_context.Entry(package).State = EntityState.Modified; // Optional if using DbContext tracking
+                _context.SaveChanges();
             }
         }
 
-        public static void DeletePackage(int id) => Packages.RemoveAll(p => p.PackageId == id);
+        public void DeletePackage(int id)
+        {
+            var package = _context.Packages.Find(id);
+            if (package != null)
+            {
+                _context.Packages.Remove(package);
+                _context.SaveChanges();
+            }
+        }
     }
 }

@@ -7,9 +7,17 @@ namespace CW_COMP_1471.Controllers
 {
     public class PricingController : Controller
     {
+        private static IPricingService pricingService;
+        private static IPlayService playService;
+        public PricingController(IPricingService _pricingService, IPlayService _playService)
+        {
+            pricingService = _pricingService;
+            playService = _playService;
+        }
+
         public IActionResult Index()
         {
-            return View(PricingService.GetPricings());
+            return View(pricingService.GetPricings());
         }
 
         // Show Add Pricing band Form
@@ -17,7 +25,7 @@ namespace CW_COMP_1471.Controllers
         {
             var model = new Pricing
             {
-                plays = new SelectList(PlayService.GetAllPlays(), "Playid", "Title")
+                Plays = new SelectList(playService.GetAllPlays(), "PlayId", "Title")
             };
             return View(model);
         }
@@ -35,16 +43,16 @@ namespace CW_COMP_1471.Controllers
                 return View("CreatePricing", Pricing);
             }
 
-            PricingService.Add(Pricing);
+            pricingService.Add(Pricing);
             return RedirectToAction("Index");
         }
 
         public ActionResult EditPricing(int id)
         {
-            var pricing = PricingService.GetById(id);
+            var pricing = pricingService.GetById(id);
             if (pricing == null)
                 return HttpNotFound();
-            pricing.plays = new SelectList(PlayService.GetAllPlays(), "Playid", "Title");
+            pricing.Plays = new SelectList(playService.GetAllPlays(), "PlayId", "Title");
             return View(pricing);
         }
 
@@ -65,13 +73,13 @@ namespace CW_COMP_1471.Controllers
                 return View("EditPricing", Pricing);
             }
 
-            PricingService.Update(Pricing);
+            pricingService.Update(Pricing);
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)
         {
-            PricingService.Delete(id);
+            pricingService.Delete(id);
             return RedirectToAction("Index");
         }
     }

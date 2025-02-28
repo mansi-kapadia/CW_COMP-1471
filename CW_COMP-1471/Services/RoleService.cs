@@ -2,40 +2,45 @@
 
 namespace CW_COMP_1471.Services
 {
-    public class RoleService
+    public class RoleService : IRoleService
     {
-        private static List<Role> roles =  new List<Role>
-            {
-                new Role { Id = 1, RoleName = "Admin"  },
-                new Role { Id = 2, RoleName = "User" },
-                new Role { Id = 3, RoleName = "Manager" }
-            };
+        private readonly ApplicationDbContext _context;
 
-        public static List<Role> GetRoles()
+        public RoleService(ApplicationDbContext context)
         {
-            return roles;  
+            _context = context;
         }
 
-        public static Role GetById(int id)
+        // Get All Roll
+        public IEnumerable<Role> GetRoles()
         {
-            return roles.FirstOrDefault(u => u.Id == id);
+            return _context.Role.ToList();
         }
 
-        // Add a new user
-        public static void Add(Role role)
+        //Fetch Role by ID
+        public Role? GetById(int id)
         {
-            role.Id = roles.Any() ? roles.Max(u => u.Id) + 1 : 1;
-            roles.Add(role);
+            return _context.Role.Find(id);
         }
 
-        // Update an existing role
-        public static void Update(Role updatedRole)
+        // Add new Role
+        public void Add(Role role)
         {
-            var role = roles.FirstOrDefault(u => u.Id == updatedRole.Id);
+            _context.Role.Add(role);
+            _context.SaveChanges();
+        }
+
+
+        // Update Role
+        public void Update(Role updatedRole)
+        {
+            var role = _context.Role.Find(updatedRole.Id);
             if (role != null)
             {
                 role.RoleName = updatedRole.RoleName;
                 role.IsActive = updatedRole.IsActive;
+
+                _context.SaveChanges();
             }
         }
     }

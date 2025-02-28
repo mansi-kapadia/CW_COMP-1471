@@ -1,51 +1,59 @@
 ﻿using CW_COMP_1471.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CW_COMP_1471.Services
 {
-    public class PricingService
+    public class PricingService : IPricingService
     {
-        private static List<Pricing> Pricings = new List<Pricing>
+        private readonly ApplicationDbContext _context;
+
+        public PricingService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // Get All Pricing
+        public IEnumerable<Pricing> GetPricings()
+        {
+            return _context.Pricings.ToList();
+        }
+
+        // Get Pricing by ID
+        public Pricing? GetById(int id)
+        {
+            return _context.Pricings.Find(id);
+        }
+
+        // Add new pricing 
+        public void Add(Pricing pricing)
+        {
+            _context.Pricings.Add(pricing);
+            _context.SaveChanges();
+        }
+
+        // Update Pricing details
+        public void Update(Pricing updatedPricing)
+        {
+            var pricing = _context.Pricings.Find(updatedPricing.Pricingid);
+            if (pricing != null)
             {
-                new Pricing { Pricingid = 1, Band = "A" , Price = 100 , PlayId = 1  },
-                new Pricing { Pricingid = 2, Band = "B" , Price = 200 , PlayId = 2  },
-                new Pricing { Pricingid = 3, Band = "C" , Price = 300 , PlayId = 3  },
-            };
+                pricing.Band = updatedPricing.Band;
+                pricing.Price = updatedPricing.Price;
+                pricing.PlayId = updatedPricing.PlayId;
 
-        public static List<Pricing> GetPricings()
-        {
-            return Pricings;
-        }
-
-        public static Pricing GetById(int id)
-        {
-            return Pricings.FirstOrDefault(u => u.Pricingid == id);
-        }
-
-        // Add a new user
-        public static void Add(Pricing Pricing)
-        {
-            Pricing.Pricingid = Pricings.Any() ? Pricings.Max(u => u.Pricingid) + 1 : 1;
-            Pricings.Add(Pricing);
-        }
-
-        // Update an existing Pricing
-        public static void Update(Pricing updatedPricing)
-        {
-            var Pricing = Pricings.FirstOrDefault(u => u.Pricingid == updatedPricing.Pricingid);
-            if (Pricing != null)
-            {
-                Pricing.Band = updatedPricing.Band;
-                Pricing.Pricingid = updatedPricing.Pricingid;
-                Pricing.PlayId = updatedPricing.PlayId;
+                _context.SaveChanges();
             }
         }
 
-        public static void Delete(int id)
+        // Delete Pricing
+        public void Delete(int id)
         {
-            var band = Pricings.FirstOrDefault(u => u.Pricingid == id);
-            if (band != null)
+            var pricing = _context.Pricings.Find(id);
+            if (pricing != null)
             {
-                Pricings.Remove(band);
+                _context.Pricings.Remove(pricing);
+                _context.SaveChanges();
             }
         }
     }
