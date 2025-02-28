@@ -1,10 +1,21 @@
 ﻿using CW_COMP_1471.Models;
+using CW_COMP_1471.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CW_COMP_1471.Controllers
 {
     public class AccountController : Controller
     {
+
+        private static IRoleService roleService;
+        private static IUserService userService;
+
+        public AccountController(IRoleService _roleService, IUserService _userService)
+        {
+            roleService = _roleService;
+            userService = _userService;
+        }
 
         // use this link
         //http://www.mtutorial.com/asp.net-core-login-logout-registration-example
@@ -19,24 +30,62 @@ namespace CW_COMP_1471.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    var userdetails = await _context.Userdetails
-            //    .SingleOrDefaultAsync(m => m.Email == model.Email && m.Password == model.Password);
-            //    if (userdetails == null)
-            //    {
-            //        ModelState.AddModelError("Password", "Invalid login attempt.");
-            //        return View("Index");
-            //    }
-            //    HttpContext.Session.SetString("userId", userdetails.Name);
+            if (userService.CheckPassword(model))
+            {
+                // Create a cookie with username (or session token)
+                var cookieOptions = new CookieOptions
+                {
+                    Expires = DateTime.UtcNow.AddHours(1),
+                    HttpOnly = true,
+                    Secure = true, 
+                    IsEssential = true
+                };
 
-            //}
-            //else
-            //{
-              return View();
-            //}
-            //return RedirectToAction("Index", "Home");
+                Response.Cookies.Append("UserSession", model.Username, cookieOptions);
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewBag.Message = "Invalid credentials";
+            return View();
+
         }
 
+        // Display the Register Form
+        [HttpGet]
+        public IActionResult Register()
+        {
+            var model = userService.GetRegisterModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Register(User model)
+        {
+            if (ModelState.IsValid)
+            {
+                var isRegistered = userService.RegisterUser(model);
+                if (!isRegistered)
+                {
+                    ModelState.AddModelError("UserName", "Username already exists.");
+                    model.Roles = new SelectList(userService.GetRegisterModel().Roles, "Value", "Text");
+                    return View(model);
+                }
+
+                return RedirectToAction("Login"); 
+            }
+
+            // Reload Roles if validation fails
+            model.Roles = new SelectList(userService.GetRegisterModel().Roles, "Value", "Text");
+
+            return View(model);
+        }
+
+        public IActionResult Logout()
+        {
+            // Remove the cookie
+            Response.Cookies.Delete("UserSession"); 
+            return RedirectToAction("Login", "Account");
+        }
     }
 }

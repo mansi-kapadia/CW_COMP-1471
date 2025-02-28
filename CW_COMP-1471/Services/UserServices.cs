@@ -1,4 +1,5 @@
 ﻿using CW_COMP_1471.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +52,6 @@ namespace CW_COMP_1471.Services
                 user.Email = updatedUser.Email;
                 user.PhoneNumber = updatedUser.PhoneNumber;
                 user.Address = updatedUser.Address;
-
                 _context.SaveChanges();
             }
         }
@@ -65,6 +65,35 @@ namespace CW_COMP_1471.Services
                 _context.Users.Remove(user);
                 _context.SaveChanges();
             }
+        }
+
+        // Get User model with Customer role 
+        public User GetRegisterModel()
+        {
+            return new User
+            {
+                RoleId = _context.Role.FirstOrDefault(r => r.RoleName == "Customer")?.Id ?? 2,
+            };
+        }
+
+        public bool RegisterUser(User model)
+        {
+            if (_context.Users.Any(u => u.UserName == model.UserName))
+                return false;
+
+            // incrypt password -- will do later 
+            //model.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
+
+            _context.Users.Add(model);
+            _context.SaveChanges();
+            return true;
+        }
+
+        public bool CheckPassword(LoginViewModel loginViewModel)
+        {
+            User user = _context.Users.FirstOrDefault(x => x.UserName == loginViewModel.Username);
+            if (user == null) return false;
+            return user.Password == loginViewModel.Password;
         }
     }
 }

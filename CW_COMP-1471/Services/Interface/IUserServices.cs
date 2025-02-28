@@ -16,5 +16,11 @@ namespace CW_COMP_1471.Services
         void UpdateUser(User updatedUser);
 
         void DeleteUser(int id);
+
+        User GetRegisterModel();
+
+        bool RegisterUser(User model);
+
+        bool CheckPassword(LoginViewModel loginViewModel);
     }
 }
