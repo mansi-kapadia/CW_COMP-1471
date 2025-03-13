@@ -1,5 +1,6 @@
 ﻿using CW_COMP_1471.Models;
 using CW_COMP_1471.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -30,18 +31,27 @@ namespace CW_COMP_1471.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
         {
+
             if (userService.CheckPassword(model))
             {
+
                 // Create a cookie with username (or session token)
                 var cookieOptions = new CookieOptions
                 {
                     Expires = DateTime.UtcNow.AddHours(1),
                     HttpOnly = true,
-                    Secure = true, 
-                    IsEssential = true
+                    Secure = false,
+                    IsEssential = true,
                 };
-
+                User user = userService.GetUserByUsername(model.Username);
                 Response.Cookies.Append("UserSession", model.Username, cookieOptions);
+
+                if (user != null)
+                {
+                    HttpContext.Session.SetInt32("LoggedInUser", user.Id);
+                    int? sessionUserId = HttpContext.Session.GetInt32("LoggedInUser");
+                    Console.WriteLine("Session Set: " + sessionUserId); // Should print the user ID
+                }
 
                 return RedirectToAction("Index", "Home");
             }

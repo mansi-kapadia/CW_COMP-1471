@@ -19,12 +19,16 @@ namespace CW_COMP_1471.Models
         [Column("dateandtime")]
         public DateTime Dateandtime { get; set; }
         [Column("playtype")]
-        public string Playtype { get; set; }
+        public string PlayType { get; set; }
 
-        [Column("packageid")]
-        public int PackageId { get; set; }
-        [NotMapped]
-        public Package? Package { get; set; }
+        //[Column("packageid")]
+        //public int PackageId { get; set; }
+        //[NotMapped]
+        //public Package? Package { get; set; }
+
+        [Column("imageurl")]
+        public string ImageUrl { get; set; }
+        
     }
 
 }

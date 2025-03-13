@@ -32,7 +32,13 @@
                 </div>
                 <div class="form-group">
                     <label>Play Type</label>
-                    @Html.TextBoxFor(m => m.Playtype, new { @class = "form-control", placeholder = "Enter Play Type" })
+                    @Html.TextBoxFor(m => m.PlayType, new { @class = "form-control", placeholder = "Enter Play Type" })
+                </div>
+            </div>
+             <div class="col-md-6">
+                <div class="form-group">
+                    <label>Image</label>
+                    @Html.TextBoxFor(m => m.ImageUrl, new { @class = "form-control"})
                 </div>
             </div>
         </div>

@@ -12,33 +12,26 @@
         {
             <div class="col-md-4 mb-4">
                 <div class="card shadow-lg h-100">
+                    <img src="@play.ImageUrl" class="card-img-top img-fixed" alt="@play.Title">
                     <div class="card-body">
                         <h5 class="card-title">@play.Title</h5>
                         <h6 class="card-subtitle text-muted">@play.Genre</h6>
                         <p class="card-text mt-2">@play.Description</p>
                         <p><strong>Date & Time:</strong> @play.Dateandtime.ToString("dd-MM-yyyy hh:mm tt")</p>
-                        <p><strong>Play Type:</strong> @play.Playtype</p>
-                        
-                        <div class="form-group">
-                            <label for="pricingBand-@play.PlayId"><strong>Pricing Band</strong></label>
-                            <select id="pricingBand-@play.PlayId" class="form-control">
-                                <option value="Economy">Economy</option>
-                                <option value="Standard">Standard</option>
-                                <option value="Premium">Premium</option>
-                            </select>
-                        </div>
-
+                        <p><strong>Play Type:</strong> @play.PlayType</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <div class="input-group" style="width: 120px;">
                                 <button class="btn btn-outline-secondary" type="button" onclick="decrement(@play.PlayId)">-</button>
                                 <input type="text" id="ticketCount-@play.PlayId" class="form-control text-center" value="1" readonly />
                                 <button class="btn btn-outline-secondary" type="button" onclick="increment(@play.PlayId)">+</button>
                             </div>
-                            <button class="btn btn-primary" onclick="addToCart(@play.PlayId)">Add to Cart</button>
+                            @play.PlayId
+                            <button class="btn btn-primary" onclick="addToBooking(@play.PlayId)">Add to Cart</button>
                         </div>
                     </div>
                 </div>
             </div>
+
         }
     </div>
 </div>
@@ -60,11 +53,36 @@
         }
     }
 
-    function addToCart(PlayId) {
-        var count = document.getElementById("ticketCount-" + PlayId).value;
-        var pricingBand = document.getElementById("pricingBand-" + PlayId).value;
+   function addToBooking(PlayId) {
+    var count = document.getElementById("ticketCount-" + PlayId)?.value;
 
-        // Send data to the server (can be integrated with AJAX for real-time cart updates)
-        alert(`Added ${count} tickets for Play ID ${PlayId} with ${pricingBand} pricing to cart!`);
+    if (!count) {
+        console.error("Missing input values");
+        return;
     }
+
+    var booking = {
+        UserId : 0,
+        Quantity: parseInt(count),
+        PlayId: PlayId,
+    };
+
+    fetch('api/bookings', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(booking)
+    })
+    .then(response => response.json())
+    .then(data => {        
+        alert(data.message);
+        let cartCountElement = document.getElementById("cartCount");
+        cartCountElement.textContent = data.result;
+    })
+    .catch(error => console.error('Error:",', error));
+}
+
+
+
 </script>

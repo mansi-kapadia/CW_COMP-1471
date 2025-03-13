@@ -95,5 +95,10 @@ namespace CW_COMP_1471.Services
             if (user == null) return false;
             return user.Password == loginViewModel.Password;
         }
+
+        public User? GetUserByUsername(string username)
+        {
+            return _context.Users.FirstOrDefault(x => x.UserName == username);
+        }
     }
 }

@@ -11,6 +11,8 @@ namespace CW_COMP_1471.Services
 
         User? GetUserById(int id);
 
+        User? GetUserByUsername(string username);
+
         void AddUser(User user);
 
         void UpdateUser(User updatedUser);

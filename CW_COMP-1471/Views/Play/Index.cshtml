@@ -25,12 +25,12 @@
                 <td>@play.Genre</td>
                 <td>@play.Description</td>
                 <td>@play.Dateandtime.ToString("yyyy-MM-dd HH:mm")</td>
-                <td>@play.Playtype</td>
-                <td>@if (play.Package != null)
+                <td>@play.PlayType</td>
+               @* <td>@if (play.Package != null)
                     {
                         @play.Package.Name
                     }
-                </td>
+                </td>*@
                 <td>
                     <a asp-action="EditPlay" asp-route-id="@play.PlayId" class="btn btn-primary">Edit</a>
                     <a asp-action="Delete" asp-route-id="@play.PlayId" class="btn btn-danger">Delete</a>

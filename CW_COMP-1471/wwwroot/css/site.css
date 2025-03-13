@@ -16,3 +16,89 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.img-fixed {
+    height: 200px; /* Set a fixed height */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    width: 100%; /* Ensures it spans the full width of the card */
+    border-top-left-radius: 8px; /* Optional: matches Bootstrap card border-radius */
+    border-top-right-radius: 8px;
+}
+
+.credit-card {
+    width: 100%;
+    max-width: 400px;
+    height: 250px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 15px;
+    color: white;
+    padding: 20px;
+    position: relative;
+    margin: 20px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-chip {
+    width: 50px;
+    height: 30px;
+    background: gold;
+    border-radius: 5px;
+}
+
+.card-logo {
+    font-size: 30px;
+}
+
+.card-number-container {
+    text-align: center;
+}
+
+.card-number {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    text-align: center;
+    color: white;
+    letter-spacing: 3px;
+    width: 100%;
+    max-width: 90%;
+    outline: none;
+}
+
+.card-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cardholder, .expiry, .cvv {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+.cardholder-name, .expiry-date, .cvv-code {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    text-align: center;
+    color: white;
+    outline: none;
+    width: 100%;
+}
+
+.total-amount {
+    margin-top: 10px;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}

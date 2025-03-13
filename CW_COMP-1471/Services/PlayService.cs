@@ -40,8 +40,8 @@ namespace CW_COMP_1471.Services
                 existingPlay.Genre = play.Genre;
                 existingPlay.Description = play.Description;
                 existingPlay.Dateandtime = play.Dateandtime.ToUniversalTime(); ;
-                existingPlay.Playtype = play.Playtype;
-                existingPlay.PackageId = play.PackageId;
+                existingPlay.PlayType = play.PlayType;
+                //existingPlay.PackageId = play.PackageId;
 
                 _context.SaveChanges();
             }

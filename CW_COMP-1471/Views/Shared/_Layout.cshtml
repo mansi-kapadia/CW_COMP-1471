@@ -34,7 +34,7 @@
                         </ul>
 
                         <!-- Cart Button -->
-                        <a class="btn btn-outline-primary position-relative me-3" asp-controller="Cart" asp-action="Index">
+                        <a class="btn btn-outline-primary position-relative me-3" id="cartButton">
                             🛒 Cart 
                             <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                 0
@@ -78,17 +78,56 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     
     <script>
-        function updateCartCount(count) {
-            document.getElementById("cartCount").innerText = count;
+        let cartItems = [];
+
+        function updateCartCount() {
+            let totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById("cartCount").innerText = totalCount;
         }
 
-        let cartItems = 0;
+        function addToCart(PlayId, inputId) {
+            let quantity = parseInt(document.getElementById(inputId).value) || 1;
         
-        function addToCart(PlayId) {
-            cartItems++;
-            updateCartCount(cartItems);
-            alert("Added to Cart! Current Items: " + cartItems);
+            let existingItem = cartItems.find(item => item.playId === PlayId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cartItems.push({ playId: PlayId, quantity });
+            }
+
+            updateCartCount();
+            alert(`Added to Cart! Current Items: ${cartItems.length}`);
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch cart count
+            fetch('/api/bookings/getcartcount', { 
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("cartCount" , data);
+
+                let cartCountElement = document.getElementById("cartCount");
+
+                console.log(cartCountElement);
+                cartCountElement.textContent = data || 0;
+                if (data.count === 0) {
+                    cartCountElement.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error fetching cart count:', error));
+
+            // Redirect to Cart Index when the button is clicked
+            document.getElementById("cartButton").addEventListener("click", function (event) {
+                event.preventDefault();
+        
+                window.location.href = "api/Cart/"; // Redirect to Cart Index
+            });
+        });
+
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

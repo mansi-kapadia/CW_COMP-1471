@@ -1,5 +1,4 @@
 ﻿using CW_COMP_1471.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CW_COMP_1471
@@ -21,11 +20,13 @@ namespace CW_COMP_1471
 
         public DbSet<Package> Packages { get; set; }
 
+        public DbSet<Booking> Bookings { get; set; }
+
+        public DbSet<Ticket> Tickets { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
         }
-
-
     }
 }
