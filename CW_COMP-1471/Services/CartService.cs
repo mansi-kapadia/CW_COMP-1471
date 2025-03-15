@@ -16,6 +16,7 @@ public class CartService : ICartService
 
     public async Task<CartModel> GetCart(int userId)
     {
+        var newCart = new CartModel();
         var booking = await _context.Bookings
             .Where(b => b.UserId == userId && !b.FinalCheckout)
             .Select(b => new CartBooking
@@ -25,38 +26,36 @@ public class CartService : ICartService
                 DiscountId = b.DiscountId,
             }).FirstOrDefaultAsync();
 
-        var tickets = await _context.Tickets.Where(t => t.BookingId == booking.BookingId).ToListAsync();
+        if (booking != null)
+        {
+            booking.Tickets = await _context.Tickets
+                        .Include(t => t.Play) 
+                        .Include(t => t.Pricing)
+                        .Where(t => t.BookingId == booking.BookingId)
+                        .Select(t => new TicketModel
+                        {
+                            TicketId = t.TicketId,
+                            PlayName = t.Play != null ? t.Play.Title : "",
+                            SeatNumber = t.SeatNumber,
+                            Age = t.Age,
+                            PricingType = t.Pricing != null ? t.Pricing.Band : "",
+                            PricingId = t.PricingId,
+                            Price = t.Pricing != null ? t.Pricing.Price : 0,
+                        }).ToListAsync();
 
-        booking.Tickets = await _context.Tickets
-                    .Include(t => t.Play) 
-                    .Include(t => t.Pricing)
-                    .Where(t => t.BookingId == booking.BookingId)
-                    .Select(t => new TicketModel
-                    {
-                        TicketId = t.TicketId,
-                        PlayName = t.Play != null ? t.Play.Title : "",
-                        SeatNumber = t.SeatNumber,
-                        Age = t.Age,
-                        PricingType = t.Pricing != null ? t.Pricing.Band : "",
-                        PricingId = t.PricingId,
-                        Price = t.Pricing != null ? t.Pricing.Price : 0,
-                    }).ToListAsync();
+            var discount = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountId == booking.DiscountId);
+            var package = await _context.Packages.FirstOrDefaultAsync(x => x.PackageId == booking.PackageId);
 
+            newCart.BookingId = booking.BookingId;
+            newCart.Tickets = booking.Tickets;
+            newCart.Discount = discount;
+            newCart.Package = package;
+        }
 
         var pricingTypes = await _context.Pricings.ToListAsync();
+        newCart.PricingTypes = pricingTypes;
 
-
-        var discount = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountId == booking.DiscountId);
-        var package = await _context.Packages.FirstOrDefaultAsync(x => x.PackageId == booking.PackageId);
-
-        return new CartModel
-        {
-            BookingId = booking.BookingId,
-            Tickets = booking?.Tickets ?? new List<TicketModel>(),
-            PricingTypes = pricingTypes,
-            Discount = discount,
-            Package = package
-        };
+        return newCart;
     }
 
     public async Task<Discount> ApplyDiscount(int bookingId, string code)
