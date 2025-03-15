@@ -91,8 +91,10 @@ namespace CW_COMP_1471.Services
 
         public bool CheckPassword(LoginViewModel loginViewModel)
         {
-            User user = _context.Users.FirstOrDefault(x => x.UserName == loginViewModel.Username);
-            if (user == null) return false;
+            User user = _context.Users.First(x => x.UserName == loginViewModel.Username);
+            if (user == null)
+                return false;
+                
             return user.Password == loginViewModel.Password;
         }
 

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using CW_COMP_1471.Controllers;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,9 +22,10 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
+
                 <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
-                    
-                    @if (Context.Request.Cookies["UserSession"] != null)
+
+                    @if (AccountController.IsUserLoggedIn(Context))
                     {
                         <ul class="navbar-nav me-auto">                            
                             <li class="nav-item"><a class="nav-link" asp-controller="User" asp-action="Index">Users</a></li>
@@ -44,7 +47,7 @@
                 
                     <!-- Authentication Buttons -->
                     <div class="d-flex">
-                        @if (Context.Request.Cookies["UserSession"] != null) // User is logged in
+                        @if (AccountController.IsUserLoggedIn(Context)) // User is logged in
                         {
                             <form method="post" asp-controller="Account" asp-action="Logout">
                                 <button type="submit" class="btn btn-outline-danger">Logout</button>

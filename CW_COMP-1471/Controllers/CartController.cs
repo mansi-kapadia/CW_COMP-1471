@@ -18,7 +18,12 @@ public class CartController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        int userId = (int)HttpContext.Session.GetInt32("LoggedInUser");
+        int? userIdNullable = HttpContext.Session.GetInt32("LoggedInUser");
+        if (!userIdNullable.HasValue)
+        {
+            return Unauthorized(new { success = false, message = "User is not logged in." });
+        }
+        int userId = userIdNullable.Value;
 
         CartModel model = await cartService.GetCart(userId);
         return View(model);

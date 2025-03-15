@@ -34,20 +34,11 @@ namespace CW_COMP_1471.Controllers
 
             if (userService.CheckPassword(model))
             {
-
-                // Create a cookie with username (or session token)
-                var cookieOptions = new CookieOptions
-                {
-                    Expires = DateTime.UtcNow.AddHours(1),
-                    HttpOnly = true,
-                    Secure = false,
-                    IsEssential = true,
-                };
                 User user = userService.GetUserByUsername(model.Username);
-                Response.Cookies.Append("UserSession", model.Username, cookieOptions);
 
                 if (user != null)
                 {
+                    SaveUserCookie(HttpContext, user.Id);
                     HttpContext.Session.SetInt32("LoggedInUser", user.Id);
                     int? sessionUserId = HttpContext.Session.GetInt32("LoggedInUser");
                     Console.WriteLine("Session Set: " + sessionUserId); // Should print the user ID
@@ -96,6 +87,41 @@ namespace CW_COMP_1471.Controllers
             // Remove the cookie
             Response.Cookies.Delete("UserSession"); 
             return RedirectToAction("Login", "Account");
+        }
+
+        public static bool IsUserLoggedIn(HttpContext httpContext)
+        {
+            var userCookie = httpContext.Request.Cookies["UserSession"];
+            var sessionUserId = httpContext.Session.GetInt32("LoggedInUser");
+            if (userCookie == null && sessionUserId == null)
+            {
+                return false;
+            }
+            else if (userCookie != null)
+            {
+                var userId = Convert.ToInt32(userCookie);
+                httpContext.Session.SetInt32("LoggedInUser", userId);
+                return true;
+            }
+            else if (sessionUserId != null)
+            {
+                SaveUserCookie(httpContext, sessionUserId.Value);
+                return true;
+            }
+
+            return false;
+        }
+
+        public static void SaveUserCookie(HttpContext httpContext, int userId)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                Expires = DateTime.UtcNow.AddHours(1),
+                HttpOnly = true,
+                Secure = false,
+                IsEssential = true,
+            };
+            httpContext.Response.Cookies.Append("UserSession", userId.ToString(), cookieOptions);
         }
     }
 }
