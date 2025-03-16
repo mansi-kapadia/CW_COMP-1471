@@ -72,8 +72,9 @@
         <hr>
         <h5><strong>Final Total:</strong> £<span id="finalTotal">0.00</span></h5>
     </div>
-
-    <button class="btn btn-success mt-3" onclick="proceedToCheckout()">Proceed to Checkout</button>
+    <button class="btn btn-success mt-3" onclick="proceedToCheckout()" @(Model != null && Model.Tickets != null ? "" : "disabled")>
+        Proceed to Checkout
+    </button>
 </div>
 
 <script>
@@ -157,7 +158,6 @@
             discountMessage.style.color = "red";
             console.error("Error:", error);
         });
-
     }
 
     function proceedToCheckout() {
