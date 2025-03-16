@@ -86,6 +86,7 @@ namespace CW_COMP_1471.Controllers
         {
             // Remove the cookie
             Response.Cookies.Delete("UserSession"); 
+            HttpContext.Session.Remove("LoggedInUser");
             return RedirectToAction("Login", "Account");
         }
 
@@ -122,6 +123,21 @@ namespace CW_COMP_1471.Controllers
                 IsEssential = true,
             };
             httpContext.Response.Cookies.Append("UserSession", userId.ToString(), cookieOptions);
+        }
+
+        public static bool IsCurrentUserAdmin(HttpContext httpContext)
+        {
+            var sessionUserId = httpContext.Session.GetInt32("LoggedInUser");
+            if (sessionUserId != null)
+            {
+                var userService = httpContext.RequestServices.GetService(typeof(IUserService)) as IUserService;
+                var user = userService?.GetUserById(sessionUserId.Value);
+                if (user != null && user.RoleId == 1)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
