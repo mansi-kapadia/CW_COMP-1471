@@ -4,38 +4,63 @@
     ViewBag.Title = "Update Discount";
 }
 
-<h2 class="mb-4">Edit Discount</h2>
-
 @using (Html.BeginForm("Edit", "Discount", FormMethod.Post))
 {
-    <div class="container">
+    <div class="container create-edit-form">
+        <h2 class="mb-4">Edit Discount</h2>
+
+        @Html.HiddenFor(m => m.DiscountId)
+
         <div class="row">
             <div class="col-md-6">
-                @Html.HiddenFor(m => m.DiscountId)
                 <div class="form-group">
                     <label>Code</label>
-                    @Html.TextBoxFor(m => m.Code, new { @class = "form-control", placeholder = "Enter Discount Code" })
+                    @Html.TextBoxFor(m => m.Code, new { @class = "form-control", placeholder = "Enter Discount Code", required = "required" })
+                    @Html.ValidationMessageFor(m => m.Code, "", new { @class = "text-danger" })
                 </div>
+
                 <div class="form-group">
                     <label>Description</label>
-                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = "Enter Description", rows = 3 })
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = "Enter Description", rows = 3, required = "required" })
+                    @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label>Expiry Date</label>
+                    @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", required = "required" })
+                    @Html.ValidationMessageFor(m => m.ExpiryDate, "", new { @class = "text-danger" })
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Discount Amount</label>
-                    @Html.TextBoxFor(m => m.DiscountAmount, new { @class = "form-control", type = "number", placeholder = "Enter Discount Amount" })
+                    @Html.TextBoxFor(m => m.DiscountAmount, new { @class = "form-control", type = "number", placeholder = "Enter Discount Amount", required = "required", min = "0" })
+                    @Html.ValidationMessageFor(m => m.DiscountAmount, "", new { @class = "text-danger" })
                 </div>
-                <div class="form-group">
-                    <label>Expiry Date</label>
-                    @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+
+                <div class="form-group d-flex align-items-center">
+                    <label class="me-2">For Kids</label>
+                    <div class="form-check">
+                        @Html.CheckBoxFor(m => m.IsForKids, new { @class = "form-check-input" })
+                        <label class="form-check-label ms-1">Yes</label>
+                    </div>
+                </div>
+
+                <div class="form-group d-flex align-items-center">
+                    <label class="me-2">For Pensioners</label>
+                    <div class="form-check">
+                        @Html.CheckBoxFor(m => m.IsForPensioners, new { @class = "form-check-input" })
+                        <label class="form-check-label ms-1">Yes</label>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="row mt-4">
-            <div class="col-md-12 text-center">
-                <button type="submit" class="btn btn-success btn-lg">Update Discount</button>
+            <div class="col-md-12 d-flex justify-content-end">
+                <button type="submit" class="btn btn-success me-2">Update Discount</button>
+                <a href="@Url.Action("Index", "Discount")" class="btn btn-outline-success">Back to List</a>
             </div>
         </div>
     </div>

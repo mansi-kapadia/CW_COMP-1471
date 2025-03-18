@@ -3,7 +3,7 @@
 }
 
 <div class="container mt-5">
-    <h2>Checkout -- Development in Prog</h2>
+    <h2>Checkout</h2>
 
   <div class="credit-card">
         <div class="card-header">
@@ -15,6 +15,8 @@
             <input type="text" id="cardNumber" class="form-control card-number" placeholder="1234 5678 9012 3456"
                 maxlength="19" required oninput="updateCardDisplay()" />
         </div>
+
+        <input type="hidden" id="bookingId" value="@Model.BookingId" />
 
         <div class="card-details">
             <div class="cardholder">
@@ -36,20 +38,30 @@
 
     <!-- Total Amount -->
     <div class="total-amount text-center">
-        <h4>Total Booking Amount: £<span id="totalAmount">99.99</span></h4>
+        <h4>Subtotal: £<span id="subtotal">@(Model.Amount + (Model.Discount?.DiscountAmount ?? 0.00))</span></h4>
+        <h4>Discount: -£<span id="discount">@Model.Discount?.DiscountAmount ?? 0.00</span></h4>
+        <hr>
+        <h4><strong>Final Total:</strong> £<span id="totalAmount">@Model.Amount</span></h4>
     </div>
+
 
     <button type="button" class="btn btn-success w-100 mt-3" onclick="processPayment()">Pay Now</button>
 
 </div>
 
 <script>
+
     function processPayment() {
+        
+        console.log("processPayment");
+
         let cardholderName = document.getElementById("cardholderName").value.trim();
-        let cardNumber = document.getElementById("cardNumber").value.replace(/\s/g, ""); // Remove spaces
+        let cardNumber = document.getElementById("cardNumber").value.replace(/\s/g, "");
         let expiryDate = document.getElementById("expiryDate").value.trim();
         let cvv = document.getElementById("cvv").value.trim();
-        let totalAmount = document.getElementById("totalAmount").innerText;
+        let totalAmount = parseFloat(document.getElementById("totalAmount").innerText);
+        let discount = parseFloat(document.getElementById("discount").innerText);
+        let bookingId =  document.getElementById("bookingId").value;
 
         // Simple validation
         if (!cardholderName || !cardNumber || !expiryDate || !cvv) {
@@ -72,11 +84,62 @@
             return;
         }
 
-        window.location.href = "/orderconfirmation"; // Redirect after payment
+       fetch(`/api/checkout/ProcessPayment`, { 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    bookingId: bookingId,
+                    creditCardNumber: cardNumber,
+                    expiryDate: expiryDate,
+                    cvv: cvv
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Payment successful! Redirecting to Order Confirmation...");
+                    window.location.href = `/OrderConfirmation?paymentReferenceNumber=${data.paymentReferenceNumber}`;
+                } else {
+                    alert("Payment failed: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error processing payment:", error);
+                alert("An error occurred. Please try again.");
+            });
+
     }
 
     // Auto-format card number input
     document.getElementById("cardNumber").addEventListener("input", function () {
         this.value = this.value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
     });
+
+    function updateCardDisplay() {
+    console.log("Updating card display...");
+
+    // Get input values
+    let cardNumber = document.getElementById("cardNumber").value;
+    let cardholderName = document.getElementById("cardholderName").value.trim();
+    let expiryDate = document.getElementById("expiryDate").value.trim();
+
+    // Update displayed card number
+    let cardNumberDisplay = document.querySelector(".card-number-display");
+    if (cardNumberDisplay) {
+        cardNumberDisplay.innerText = cardNumber || "1234 5678 9012 3456"; // Default placeholder
+    }
+
+    // Update displayed cardholder name
+    let cardholderDisplay = document.querySelector(".cardholder-display");
+    if (cardholderDisplay) {
+        cardholderDisplay.innerText = cardholderName || "John Doe"; // Default placeholder
+    }
+
+    // Update displayed expiry date
+    let expiryDisplay = document.querySelector(".expiry-display");
+    if (expiryDisplay) {
+        expiryDisplay.innerText = expiryDate || "MM/YY"; // Default placeholder
+    }
+}
+
 </script>

@@ -3,29 +3,57 @@
 @{
     ViewBag.Title = "Login";
 }
+<div class="container d-flex justify-content-center align-items-center vh-80 mt-4">
+    <div class="card login-box shadow-lg">
+        <div class="row g-0">
+            <!-- Left Section (Website Info) -->
+            <div class="col-md-6 info-section d-flex flex-column justify-content-center align-items-center p-4">
+                <h3>Welcome to EventBright</h3>
+                <p>
+                    This is a platform for booking plays where users can explore and reserve tickets for
+                    a wide range of theatrical performances. Enjoy <b>exclusive discounts, premium seating options,
+                    and seamless booking experience </b>.
+                </p>
+                <p>
+                    Whether you're a fan of <b>classic drama, comedy, musicals, or modern stage plays</b>, we have something for everyone.
+                    Stay updated with upcoming shows, special events, and <b>limited-time offers</b>!
+                </p>
+                
+                <a id="navbarBrand" asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center">
+                    <img src="https://img.icons8.com/?size=100&id=W46IJyiaGbhv&format=png&color=ff6f61" 
+                    alt="eventbright logo" 
+                    class="info-img"
+                    width="30" height="30">
+                    Eventbright
+                </a>
+            </div>
 
-<h2>Login</h2>
+            <!-- Right Section (Login Form) -->
+            <div class="col-md-6 p-4 login-form">
+                <h2>Login</h2>
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Message</div>
+                }
+                @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
 
-@if (ViewBag.Message != null)
-{
-    <div class="alert alert-danger">@ViewBag.Message</div>
-}
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Username)
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+                    </div>
 
-@using (Html.BeginForm("Login", "Account", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password)
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Username)
-        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Username)
+                    <button type="submit" class="btn btn-outline-success mt-2 w-100">Login</button>
+                }
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password)
-        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Password)
-    </div>
-
-    <button type="submit" class="btn btn-primary">Login</button>
-}
+</div>

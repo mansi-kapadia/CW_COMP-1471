@@ -16,7 +16,7 @@ namespace CW_COMP_1471.Controllers
 
         public ActionResult Index()
         {
-            return View(roleService.GetRoles());
+            return View(roleService.GetRoles(false));
         }
 
         // Show Add User Form

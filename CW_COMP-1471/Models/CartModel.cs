@@ -1,4 +1,6 @@
-﻿namespace CW_COMP_1471.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CW_COMP_1471.Models
 {
     public class CartModel
     {
@@ -26,19 +28,31 @@
         public int Age { get; set; }
         public string PricingType { get; set; }
         public double Price { get; set; }
-    }
-
-    public class UpdateTicketRequest
-    {
-        public int TicketId { get; set; }
-        public int Age { get; set; }
-        public int PricingId { get; set; }
+        public int PlayId { get; set; }
     }
 
     public class ApplyDiscountRequest
     {
         public int BookingId { get; set; }
         public string DiscountCode { get; set; }
+        public List<int> Ages { get; set; }
+    }
+
+    public class CheckoutCart
+    {
+        [Required]
+        public int BookingId { get; set; }
+
+        [Required]
+        //[CreditCard] // Ensures valid card number
+        public string CreditCardNumber { get; set; }
+
+        [Required]
+        public string ExpiryDate { get; set; } // Format: MM/YY
+
+        [Required]
+        [StringLength(3, MinimumLength = 3)]
+        public string CVV { get; set; }
     }
 
 }

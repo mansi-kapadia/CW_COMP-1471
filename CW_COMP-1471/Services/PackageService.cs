@@ -37,7 +37,8 @@ namespace CW_COMP_1471.Services
             {
                 package.Name = updatedPackage.Name;
                 package.Description = updatedPackage.Description;
-                //_context.Entry(package).State = EntityState.Modified; // Optional if using DbContext tracking
+                package.MinTicketQty = updatedPackage.MinTicketQty;
+                package.FreeTicketCount = updatedPackage.FreeTicketCount;
                 _context.SaveChanges();
             }
         }

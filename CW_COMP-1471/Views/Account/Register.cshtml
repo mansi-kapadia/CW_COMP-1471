@@ -4,68 +4,100 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card shadow-sm p-3" style="max-width: 400px; width: 100%;">
-        <h4 class="text-center mb-3">User Registration</h4>
+<div class="container d-flex justify-content-center align-items-center vh-80 mt-4">
+    <div class="card login-box shadow-lg">
+        <div class="row g-0">
+            <!-- Left Section (Website Info) -->
+            <div class="col-md-6 info-section d-flex flex-column justify-content-center align-items-center p-4">
+                <h3>Join EventBright</h3>
+                <p>
+                    This is a platform for booking plays where users can explore and reserve tickets for
+                    a wide range of theatrical performances. Enjoy <b>exclusive discounts</b>, premium seating options,
+                    and seamless booking experience.
+                </p>
+                <p>
+                    Whether you're a fan of <b>classic drama, comedy, musicals, or modern stage plays</b>, we have something for everyone.
+                    Stay updated with upcoming shows, special events, and <b>limited-time offers</b>!
+                </p>
 
-        <form asp-action="Register" method="post">
-            <input type="hidden" asp-for="RoleId" />
-
-            <div class="mb-2">
-                <label class="form-label small mb-1">First Name</label>
-                <input asp-for="FirstName" class="form-control form-control-sm" required />
-                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                <a id="navbarBrand" asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center">
+                    <img src="https://img.icons8.com/?size=100&id=W46IJyiaGbhv&format=png&color=ff6f61" 
+                    alt="eventbright logo" 
+                    class="info-img"
+                    width="30" height="30">
+                    EventBright
+                </a>
             </div>
 
-            <div class="mb-2">
-                <label class="form-label small mb-1">Last Name</label>
-                <input asp-for="LastName" class="form-control form-control-sm" />
-                <span asp-validation-for="LastName" class="text-danger small"></span>
-            </div>
+            <!-- Right Section (Register Form) -->
+            <div class="col-md-6 p-4 login-form">
+                <h4 class="text-center mb-3">User Registration</h4>
 
-            <div class="mb-2">
-                <label class="form-label small mb-1">Username</label>
-                <input asp-for="UserName" class="form-control form-control-sm" required />
-                <span asp-validation-for="UserName" class="text-danger small"></span>
-            </div>
+                <form asp-action="Register" method="post">
+                    <input type="hidden" asp-for="RoleId" />
 
-            <div class="mb-2">
-                <label class="form-label small mb-1">Email</label>
-                <input asp-for="Email" type="email" class="form-control form-control-sm" required />
-                <span asp-validation-for="Email" class="text-danger small"></span>
-            </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                <input asp-for="FirstName" class="form-control" required />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="mb-2">
-                <label class="form-label small mb-1">Password</label>
-                <input asp-for="Password" type="password" class="form-control form-control-sm" required />
-                <span asp-validation-for="Password" class="text-danger small"></span>
-            </div>
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input asp-for="UserName" class="form-control" required />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
 
-            <div class="mb-2">
-                <label class="form-label small mb-1">Phone Number</label>
-                <input asp-for="PhoneNumber" class="form-control form-control-sm" />
-                <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
-            </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input asp-for="Email" type="email" class="form-control" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
 
-            <div class="mb-2">
-                <label class="form-label small mb-1">Address</label>
-                <input asp-for="Address" class="form-control form-control-sm" />
-                <span asp-validation-for="Address" class="text-danger small"></span>
-            </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input asp-for="Password" type="password" class="form-control" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
 
-            <button type="submit" class="btn btn-primary btn-sm w-100 mt-2">Register</button>
-        </form>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
 
-        @if (ViewBag.Errors != null)
-        {
-            <div class="alert alert-danger mt-2 p-2 small">
-                <ul class="mb-0">
-                    @foreach (var error in ViewBag.Errors)
-                    {
-                        <li>@error</li>
-                    }
-                </ul>
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-success w-100 mt-2">Register</button>
+                </form>
+
+                @if (ViewBag.Errors != null)
+                {
+                    <div class="alert alert-danger mt-2 p-2">
+                        <ul class="mb-0">
+                            @foreach (var error in ViewBag.Errors)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                    </div>
+                }
             </div>
-        }
+        </div>
     </div>
 </div>

@@ -37,6 +37,7 @@ namespace CW_COMP_1471.Models
         [Column("finalcheckout")]
         public bool FinalCheckout { get; set; }
 
+       
         // Navigation properties
 
         [ForeignKey("UserId")]

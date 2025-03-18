@@ -8,6 +8,7 @@
     <title>@ViewData["Title"] - CW_COMP_1471</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>   
     
@@ -16,7 +17,7 @@
             <div class="container-fluid">
                 <a id="navbarBrand" asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center">
                     <img src="https://img.icons8.com/?size=100&id=W46IJyiaGbhv&format=png&color=ff6f61" alt="eventbright logo" width="30" height="30">
-                    eventbright
+                    Eventbright
                 </a>
                 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
@@ -77,20 +78,28 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+   @* <footer class="border-top footer text-muted">
         <div class="container">
             <p>&copy; 2025 - University of Greenwich</p>
             <p>Created for the "Enterprise Software Engineering Development" module by:</p>
-            <ul>
+             <ul class="footer-list">
                 <li>Tugrul Subekci - 001421550</li>
                 <li>Hasan Yasin Yildiz - 001418766</li>
                 <li>Gopala Krishna Kumbha - 001416850</li>
                 <li>Mansi Kapadia - 001432430</li>
                 <li>Shanmukha Sai Kalluri - 001437795</li>
             </ul>
+            <p><a asp-area="" asp-controller="home" asp-action="privacy">privacy</a></p>
+        </div>
+    </footer>*@
+
+    <footer class="border-top footer text-muted">
+        <div class="container d-flex justify-content-between align-items-center">
+            <p>&copy; 2025 - University of Greenwich</p>
             <p><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></p>
         </div>
     </footer>
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

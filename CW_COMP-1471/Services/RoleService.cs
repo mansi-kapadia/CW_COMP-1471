@@ -12,8 +12,9 @@ namespace CW_COMP_1471.Services
         }
 
         // Get All Roll
-        public IEnumerable<Role> GetRoles()
+        public IEnumerable<Role> GetRoles(bool IsActive = true)
         {
+            if (IsActive) _context.Role.Where(r => r.IsActive == IsActive).ToList();
             return _context.Role.ToList();
         }
 

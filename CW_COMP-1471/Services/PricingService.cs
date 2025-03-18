@@ -35,13 +35,11 @@ namespace CW_COMP_1471.Services
         // Update Pricing details
         public void Update(Pricing updatedPricing)
         {
-            var pricing = _context.Pricings.Find(updatedPricing.Pricingid);
+            var pricing = _context.Pricings.Find(updatedPricing.PricingId);
             if (pricing != null)
             {
                 pricing.Band = updatedPricing.Band;
                 pricing.Price = updatedPricing.Price;
-                pricing.PlayId = updatedPricing.PlayId;
-
                 _context.SaveChanges();
             }
         }

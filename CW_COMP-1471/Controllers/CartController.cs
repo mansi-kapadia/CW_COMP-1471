@@ -32,18 +32,26 @@ public class CartController : Controller
     [HttpPost("applydiscount")]
     public async Task<IActionResult> ApplyDiscount([FromBody] ApplyDiscountRequest request)
     {
-        if (request == null || string.IsNullOrEmpty(request.DiscountCode) || request.BookingId <= 0)
+        try
         {
-            return BadRequest(new { success = false, message = "Invalid discount request." });
-        }
+            if (request == null || string.IsNullOrEmpty(request.DiscountCode) || request.BookingId <= 0)
+            {
+                return BadRequest(new { success = false, message = "Invalid discount request." });
+            }
 
-        var discount = await cartService.ApplyDiscount(request.BookingId, request.DiscountCode);
-        if (discount == null)
+            var discount = await cartService.ApplyDiscount(request.BookingId, request.DiscountCode, request.Ages);
+
+            if (discount == null)
+            {
+                return NotFound(new { success = false, message = "Invalid Discount Code." });
+            }
+
+            return Ok(new { success = true, discountAmount = discount.DiscountAmount, code = discount.Code });
+        }
+        catch (Exception ex)
         {
-            return NotFound(new { success = false, message = "Invalid Discount Code." });
+            return Ok(new { success = true, discountAmount = 0, code = "" , ErrorMessage = ex.Message });
         }
-
-        return Ok(new { success = true, discountAmount = discount.DiscountAmount, code = discount.Code });
     }
     
 }

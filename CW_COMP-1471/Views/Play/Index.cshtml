@@ -13,7 +13,6 @@
             <th>Description</th>
             <th>Date and Time</th>
             <th>Play Type</th>
-            <th>Package ID</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -26,18 +25,17 @@
                 <td>@play.Description</td>
                 <td>@play.Dateandtime.ToString("yyyy-MM-dd HH:mm")</td>
                 <td>@play.PlayType</td>
-               @* <td>@if (play.Package != null)
-                    {
-                        @play.Package.Name
-                    }
-                </td>*@
                 <td>
-                    <a asp-action="EditPlay" asp-route-id="@play.PlayId" class="btn btn-primary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@play.PlayId" class="btn btn-danger">Delete</a>
+                    <a asp-action="EditPlay" asp-route-id="@play.PlayId" class="icon-btn text-warning m-1">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@play.PlayId" class="icon-btn text-danger m-1" onclick="return confirm('Are you sure?');">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<a asp-action="CreatePlay" class="btn btn-success">Create New Play</a>
+<a asp-action="CreatePlay" class="btn btn-success">Create new play</a>

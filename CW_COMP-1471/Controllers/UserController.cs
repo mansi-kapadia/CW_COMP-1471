@@ -28,7 +28,7 @@ namespace CW_COMP_1471.Controllers
             //model.Roles = new SelectList(roleService.GetRoles(), "Id", "RoleName");
             var model = new User
             {
-                Roles = new SelectList(roleService.GetRoles() ?? new List<Role>(), "Id", "RoleName")
+                Roles = new SelectList(roleService.GetRoles(true) ?? new List<Role>(), "Id", "RoleName")
             };
             return View(model);
         }
@@ -56,7 +56,7 @@ namespace CW_COMP_1471.Controllers
             if (user == null)
                 return HttpNotFound();
 
-            user.Roles = new SelectList(roleService.GetRoles() ?? new List<Role>(), "Id", "RoleName");
+            user.Roles = new SelectList(roleService.GetRoles(true) ?? new List<Role>(), "Id", "RoleName");
 
             return View(user);
         }
@@ -69,12 +69,17 @@ namespace CW_COMP_1471.Controllers
         [HttpPost]
         public ActionResult Edit(User user)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                userService.UpdateUser(user);
-                return RedirectToAction("Index");
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                ViewBag.Errors = errors;
+                return View("EditUser", user);
             }
-            return View(user);
+
+            userService.UpdateUser(user);
+            return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)

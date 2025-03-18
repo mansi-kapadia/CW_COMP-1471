@@ -1,38 +1,52 @@
-﻿@{
+﻿@using System.Text.Json
+@{
     ViewData["Title"] = "Cart";
 }
 
 <div class="container mt-5">
     <h2>Your Cart</h2>
     <input type="hidden" id="bookingId" value="@Model.BookingId" />
+    
     <div id="cartItems" class="row">
         @if (Model != null && Model.Tickets != null)
         {
             foreach (var ticket in Model.Tickets)
             {
-                <div class="col-md-4">
+               <div class="col-md-4">
                     <div class="card p-3 mb-3 shadow-sm">
-                        <h5>@ticket.PlayName</h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5>@ticket.PlayName</h5>
+                            <button class="btn btn-outline-danger btn-sm delete-ticket-btn" data-id="@ticket.TicketId" onclick="deleteTicket(@ticket.TicketId)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+
                         <p><strong>Seat:</strong> @ticket.SeatNumber</p>
 
-                        <label class="fw-bold">Age:</label>
-                        <input type="number" value="@ticket.Age" class="form-control age-input" data-id="@ticket.TicketId">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="w-50">
+                                <label class="fw-bold mb-1">Age:</label>
+                                <input type="number" value="@ticket.Age" class="form-control form-control-sm age-input" data-id="@ticket.TicketId">
+                            </div>
 
-                        <label class="fw-bold mt-2">Pricing Type:</label>
-                        <select class="form-control pricing-type" data-id="@ticket.TicketId" onchange="updateTotal()">
-                            @foreach (var pricingType in Model.PricingTypes)
-                            {
-                                <option value="@pricingType.Pricingid" data-price="@pricingType.Price"
-                                    selected="@(ticket.PricingId == pricingType.Pricingid ? "selected" : null)">
-                                    @pricingType.Band - £@pricingType.Price
-                                </option>
-                            }
-                        </select>
-
-                        <!-- Total Price for each ticket -->
-                        <p class="mt-2"><strong>Total:</strong> £<span class="ticket-total" data-id="@ticket.TicketId">@ticket.Price</span></p>
+                            <div class="w-50">
+                                <label class="fw-bold mb-1">Pricing Type:</label>
+                                <select class="form-control form-control-sm pricing-type" data-id="@ticket.TicketId" onchange="updateTotal()">
+                                    @foreach (var pricingType in Model.PricingTypes)
+                                    {
+                                         <option value="@pricingType.PricingId" data-price="@pricingType.Price"
+                                                selected="@(ticket.PricingId == pricingType.PricingId ? "selected" : null)">
+                                                @pricingType.Band - £@pricingType.Price
+                                            </option>
+                                    }
+                                </select>
+                            </div>
+                        </div> 
+                        
+                         <p class="mt-2"><strong>Price:</strong> £<span class="ticket-total" data-id="@ticket.TicketId">@ticket.Price</span></p>
                     </div>
                 </div>
+
             }
         }
         else
@@ -42,8 +56,8 @@
     </div>
 
     <!-- Discount Code Section -->
-    <div class="mt-4">
-        <label class="fw-bold">Discount Code:</label>
+    <div class="mt-4 p-3 border rounded shadow-sm">
+        <h4>Discount Code</h4>
         <div class="input-group">
             @if (Model.Discount != null)
             {
@@ -52,7 +66,7 @@
             else
             {
                 <input type="text" id="discountCode" class="form-control" placeholder="Enter discount code">
-                <button class="btn btn-primary" onclick="applyDiscount()">Apply</button>
+                <button class="btn btn-success" onclick="applyDiscount()">Apply</button>
             }
         </div>
         <p id="discountMessage" class="mt-2">
@@ -63,23 +77,45 @@
         </p>
     </div>
 
+    <!--Package Summary Section -->
+    <div class="mt-4 p-3 border rounded shadow-sm package-summary">
+        <h4>Package Summary</h4>
+        @if (Model.Package != null && Model.Package.FreeTicketCount > 0)
+        {
+            <p class="text-success">
+                🎟 **You have received** <strong>@Model.Package.FreeTicketCount</strong> **free ticket(s)** as part of the 
+                <strong>@Model.Package.Name</strong> package!
+            </p>
+        }
+        else
+        {
+            <p class="text-muted">No package applied.</p>
+        }
+    </div>
 
     <!-- Cart Summary -->
     <div class="mt-4 p-3 border rounded shadow-sm">
         <h4>Cart Summary</h4>
-        <p><strong>Subtotal:</strong> £<span id="subtotal">0.00</span></p>
-        <p><strong>Discount:</strong> -£<span id="discountAmount">0.00</span></p>
+        <p><strong>Subtotal:</strong> £<span id="subtotal">0.0</span></p>
+        <p><strong>Discount:</strong> -£<span id="discountAmount">@Model.Discount.DiscountAmount</span></p>
         <hr>
         <h5><strong>Final Total:</strong> £<span id="finalTotal">0.00</span></h5>
     </div>
+
     <button class="btn btn-success mt-3" onclick="proceedToCheckout()" @(Model != null && Model.Tickets != null ? "" : "disabled")>
         Proceed to Checkout
     </button>
 </div>
 
+
 <script>
     let updatedTickets = [];
-    let discountValue = 0;
+    let discountValue = 0; 
+
+    window.onload = function () {
+        updateTotal(); 
+        attachEventListeners();
+    };
 
     function updateTotal() {
         let subtotal = 0;
@@ -87,43 +123,62 @@
         document.querySelectorAll(".pricing-type").forEach(element => {
             let ticketId = element.getAttribute("data-id");
             let price = parseFloat(element.options[element.selectedIndex].getAttribute("data-price")) || 0;
-            
-            // Update total for this ticket
-            document.querySelector(`.ticket-total[data-id='${ticketId}']`).innerText = price.toFixed(2);
+
+            // update total for this ticket
+            document.querySelector(`.ticket-total[data-id='${ticketId}']`).innertext = price.toFixed(2);
+
+             // Hide delete button if ticket is free
+            let deleteButton = document.querySelector(`.delete-ticket-btn[data-id='${ticketId}']`);
+            if (deleteButton) {
+                deleteButton.style.display = price > 0 ? "inline-block" : "none";
+            }
 
             // Add to subtotal
             subtotal += price;
         });
+        
+        discountValue = document.getElementById("discountAmount").innerText;
+        
+        // Recalculate total with discount applied
+        let finalTotal = subtotal - parseFloat(discountValue);
+
+        // Ensure discount is not more than subtotal (prevents negative values)
+        if (finalTotal < 0) {
+            finalTotal = 0;
+        }
 
         // Update displayed values
-        document.getElementById("subtotal").innerText = subtotal.toFixed(2);
-        let finalTotal = subtotal - discountValue;
+        document.getElementById("subtotal").innerText = subtotal.toFixed(2);        
         document.getElementById("finalTotal").innerText = finalTotal.toFixed(2);
     }
 
-    // Capture changes in age and pricing
-    document.querySelectorAll(".age-input, .pricing-type").forEach(element => {
-        element.addEventListener("change", function () {
-            let ticketId = this.getAttribute("data-id");
-            let age = document.querySelector(`.age-input[data-id='${ticketId}']`).value;
-            let pricingId = document.querySelector(`.pricing-type[data-id='${ticketId}']`).value;
+    // Attach event listeners for age and pricing selection changes
+    function attachEventListeners() {
+        document.querySelectorAll(".age-input, .pricing-type").forEach(element => {
+            element.addEventListener("change", function () {
+                let ticketId = this.getAttribute("data-id");
+                let age = document.querySelector(`.age-input[data-id='${ticketId}']`).value;
+                let pricingId = document.querySelector(`.pricing-type[data-id='${ticketId}']`).value;
 
-            let existingTicket = updatedTickets.find(t => t.ticketId == ticketId);
-            if (existingTicket) {
-                existingTicket.age = age;
-                existingTicket.pricingId = pricingId;
-            } else {
-                updatedTickets.push({ ticketId, age, pricingId });
-            }
+                let existingTicket = updatedTickets.find(t => t.ticketId == ticketId);
+                if (existingTicket) {
+                    existingTicket.age = age;
+                    existingTicket.pricingId = pricingId;
+                } else {
+                    updatedTickets.push({ ticketId, age, pricingId });
+                }
 
-            updateTotal();
+                updateTotal();
+            });
         });
-    });
+    }
 
+    // Apply discount and update total
     function applyDiscount() {
         let discountCode = document.getElementById("discountCode").value.trim();
         let discountMessage = document.getElementById("discountMessage");
-        let bookingId = document.getElementById("bookingId").value; 
+        let bookingId = document.getElementById("bookingId").value;
+        let ages = Array.from(document.querySelectorAll('.age-input')).map(input => input.value);
 
         if (!discountCode) {
             discountMessage.innerText = "Please enter a discount code.";
@@ -132,67 +187,64 @@
         }
 
         fetch(`/api/cart/applydiscount`, {
-            method: 'Post',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ bookingId,discountCode })
+            body: JSON.stringify({ bookingId, discountCode, ages })
         })
         .then(response => response.json())
         .then(data => {
-            console.log("Discount Response:", data);
             if (data && data.discountAmount) {
-                discountValue = parseFloat(data.discountAmount) || 0;
-                document.getElementById("discountAmount").innerText = discountValue.toFixed(2);
-
-                let subtotal = parseFloat(document.getElementById("subtotal").innerText) || 0;
-                let finalTotal = subtotal - discountValue;
-                document.getElementById("finalTotal").innerText = finalTotal.toFixed(2);
+                discountValue = parseFloat(data.discountAmount) || 0; // Store discount value
+                updateTotal(); // Recalculate totals with new discount
 
                 discountMessage.innerText = `Discount Applied! You saved £${discountValue.toFixed(2)}.`;
                 discountMessage.style.color = "green";
             } else {
-                discountMessage.innerText = "Invalid Discount Code.";
+                discountMessage.innerText = data.errorMessage || "Invalid Discount Code.";
                 discountMessage.style.color = "red";
             }
         }).catch(error => {
+            console.log(error);
             discountMessage.innerText = "Error checking discount code.";
             discountMessage.style.color = "red";
-            console.error("Error:", error);
         });
     }
 
+    // Proceed to checkout
     function proceedToCheckout() {
-        console.log("Updated Tickets:", updatedTickets);
+    console.log("Updated Tickets:", updatedTickets);
 
-        if (!updatedTickets.length) {
-            if (confirm("No changes detected. Proceed to checkout?")) {
-                window.location.href = "/checkout";
+    if (!updatedTickets.length) {
+        if (confirm("No changes detected. Proceed to checkout?")) {
+            window.location.href = "/api/checkout";
+        }
+        return;
+    }
+
+    if (confirm("Are you sure you want to proceed to checkout?")) {
+        fetch('/api/bookings/update-bookings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tickets: updatedTickets }) 
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("API Response:", data);  // Debugging
+
+            if (data.success && data.bookingId) {
+                alert("Tickets updated! Redirecting to checkout...");
+
+                window.location.href = `/api/checkout`;
+            } else {
+                alert("Failed to update tickets. Please try again.");
             }
-            return;
-        }
-
-        if (confirm("Are you sure you want to proceed to checkout?")) {
-            fetch('/api/bookings/update-tickets', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tickets: updatedTickets }) // Send all updates
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Tickets updated! Redirecting to checkout...");
-                    window.location.href = "/checkout";  // Redirect after update
-                } else {
-                    alert("Failed to update tickets. Please try again.");
-                }
-            })
-            .catch(error => {
-                console.error("Error updating tickets:", error);
-                alert("Error updating tickets. Please check your connection.");
-            });
-        }
+        })
+        .catch(error => {
+            console.error("Error updating tickets:", error);
+            alert("Error updating tickets. Please check your connection.");
+        });
+    }
 }
 
 
-    // Initial total update
-    updateTotal();
 </script>

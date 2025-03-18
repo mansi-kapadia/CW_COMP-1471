@@ -24,6 +24,7 @@ namespace CW_COMP_1471
 
         public DbSet<Ticket> Tickets { get; set; }
         
+        public DbSet<Payment> Payments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

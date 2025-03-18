@@ -23,10 +23,7 @@ namespace CW_COMP_1471.Controllers
         // Show Add Pricing band Form
         public ActionResult CreatePricing()
         {
-            var model = new Pricing
-            {
-                Plays = new SelectList(playService.GetAllPlays(), "PlayId", "Title")
-            };
+            var model = new Pricing();
             return View(model);
         }
 
@@ -51,8 +48,7 @@ namespace CW_COMP_1471.Controllers
         {
             var pricing = pricingService.GetById(id);
             if (pricing == null)
-                return HttpNotFound();
-            pricing.Plays = new SelectList(playService.GetAllPlays(), "PlayId", "Title");
+                return HttpNotFound();            
             return View(pricing);
         }
 

@@ -10,7 +10,6 @@
         <tr>
             <th>Band</th>
             <th>Price</th>
-            <th>Play ID</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -20,14 +19,17 @@
             <tr>
                 <td>@pricing.Band</td>
                 <td>@pricing.Price</td>
-                <td>@pricing.PlayId</td>
-                <td>
-                    <a asp-action="EditPricing" asp-route-id="@pricing.Pricingid" class="btn btn-primary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@pricing.Pricingid" class="btn btn-danger">Delete</a>
+               <td>
+                    <a href="@Url.Action("EditPricing", "Pricing", new { id = pricing.PricingId })" class="icon-btn text-warning m-1">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="@Url.Action("Delete", "Pricing", new { id = pricing.PricingId })" class="icon-btn text-danger m-1" onclick="return confirm('Are you sure?');">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<a asp-action="CreatePricing" class="btn btn-success">Create New Pricing</a>
+<a asp-action="CreatePricing" class="btn btn-success">Create new pricing</a>

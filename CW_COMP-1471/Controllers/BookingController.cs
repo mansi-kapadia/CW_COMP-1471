@@ -55,7 +55,7 @@ namespace CW_COMP_1471.Controllers
             }
         }
 
-        [HttpPost("update-tickets")]
+        [HttpPost("update-bookings")]
         public async Task<IActionResult> UpdateTickets([FromBody] BulkTicketUpdateRequest request)
         {
             if (request == null || request.Tickets == null || request.Tickets.Count == 0)
@@ -63,7 +63,7 @@ namespace CW_COMP_1471.Controllers
                 return BadRequest(new { success = false, message = "No ticket data received." });
             }
 
-            bool isUpdated = await _cartService.UpdateTicketsAsync(request.Tickets);
+            bool isUpdated = await _cartService.UpdateBookingAsync(request.Tickets);
 
             if (!isUpdated)
             {

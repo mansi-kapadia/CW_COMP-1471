@@ -7,12 +7,9 @@
 
 <h2>User List</h2>
 
-<a href="@Url.Action("CreateUser", "User")" class="btn btn-primary">Add User</a>
-
 <table class="table">
     <thead>
-        <tr>
-            <th>ID</th>
+        <tr>            
             <th>Name</th>
             <th>Email</th>
             <th>Phone No.</th>
@@ -24,18 +21,23 @@
     <tbody>
         @foreach (var user in Model)
         {
-            <tr>
-                <td>@user.Id</td>
+            <tr>                
                 <td>@user.FirstName @user.LastName</td>
                 <td>@user.Email</td>
                 <td>@user.PhoneNumber</td>
                 <td>@user.Address</td>
-                @*<td>@user.Role.RoleName</td>*@
+                <td>@user.Role.RoleName</td>
                 <td>
-                    <a href="@Url.Action("EditUser", "User", new { id = user.Id })" class="btn btn-warning">Edit</a>
-                    <a href="@Url.Action("Delete", "User", new { id = user.Id })" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+                   <a href="@Url.Action("EditUser", "User", new { id = user.Id })" class="icon-btn text-warning m-1">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="@Url.Action("Delete", "User", new { id = user.Id })" class="icon-btn text-danger m-1" onclick="return confirm('Are you sure?');">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<a href="@Url.Action("CreateUser", "User")" class="btn btn-success">Create new user</a>

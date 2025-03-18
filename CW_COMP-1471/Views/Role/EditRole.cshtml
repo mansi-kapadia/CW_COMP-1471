@@ -4,46 +4,48 @@
     ViewBag.Title = "Update Role";
 }
 
-<h2 class="mb-4">Update Role</h2>
-
 @using (Html.BeginForm("Edit", "Role", FormMethod.Post))
 {
-    <div class="container">
+    <div class="container create-edit-form">
+        <h2 class="mb-4">Update Role</h2>
+
+        @Html.HiddenFor(m => m.Id) <!-- Ensures Role ID is retained for updates -->
+
         <div class="row">
-            @Html.HiddenFor(m => m.Id)
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Name</label>
-                    @Html.TextBoxFor(m => m.RoleName, new { @class = "form-control", placeholder = "Enter Role Name" })
+                    <label>Role Name</label>
+                    @Html.TextBoxFor(m => m.RoleName, new { @class = "form-control", placeholder = "Enter Role Name", required = "required" })
+                    @Html.ValidationMessageFor(m => m.RoleName, "", new { @class = "text-danger" })
                 </div>
             </div>
-           <div class="col-md-6">
-                <div class="form-group">
-                    <label>Active</label>
-                    <div class="form-check">
-                        @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
-                        <label class="form-check-label">Yes</label>
-                    </div>
+
+            <div class="col-md-6 d-flex align-items-center">
+                <label class="">Active</label>
+                <div class="form-check">
+                    @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
+                    <label class="form-check-label ms-1">Yes</label>
                 </div>
             </div>
         </div>
-       
+
         <div class="row mt-4">
-            <div class="col-md-12 text-center">
-                <button type="submit" class="btn btn-success btn-lg">Update Role</button>
+            <div class="col-md-12 d-flex justify-content-end">
+                <button type="submit" class="btn btn-success me-2">Update Role</button>
+                <a href="@Url.Action("Index", "Role")" class="btn btn-outline-success">Back to List</a>
             </div>
         </div>
     </div>
 
     @if (ViewBag.Errors != null)
-{
-    <div class="alert alert-danger">
-        <ul>
-            @foreach (var error in ViewBag.Errors)
-            {
-                <li>@error</li>
-            }
-        </ul>
-    </div>
-}
+    {
+        <div class="alert alert-danger mt-3">
+            <ul>
+                @foreach (var error in ViewBag.Errors)
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        </div>
+    }
 }

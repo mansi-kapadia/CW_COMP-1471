@@ -21,14 +21,9 @@ namespace CW_COMP_1471.Models
         [Column("playtype")]
         public string PlayType { get; set; }
 
-        //[Column("packageid")]
-        //public int PackageId { get; set; }
-        //[NotMapped]
-        //public Package? Package { get; set; }
-
         [Column("imageurl")]
-        public string ImageUrl { get; set; }
-        
+        public string? ImageUrl { get; set; }
+       
     }
 
 }

@@ -6,8 +6,10 @@ namespace CW_COMP_1471.Services.Interface
     {
         Task<CartModel> GetCart(int userId);
 
-        Task<Discount> ApplyDiscount(int bookingId, string code);
+        Task<Discount> ApplyDiscount(int bookingId, string code, List<int> Ages);
 
-        Task<bool> UpdateTicketsAsync(List<TicketUpdateRequest> tickets);
+        Task<bool> UpdateBookingAsync(List<TicketUpdateRequest> tickets);
+
+        Task<Payment> CheckoutCart(CheckoutCart checkout);
     }
 }

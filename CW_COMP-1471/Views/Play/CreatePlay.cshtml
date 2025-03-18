@@ -4,47 +4,66 @@
     ViewBag.Title = "Add Play";
 }
 
-<h2 class="mb-4">Add Play</h2>
-
 @using (Html.BeginForm("Create", "Play", FormMethod.Post))
 {
-    <div class="container">
+    <div class="container create-edit-form">
+        <h2 class="mb-4">Add Play</h2>
+
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Title</label>
-                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Enter Play Title" })
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Enter Play Title", required = "required" })
+                    @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
                 </div>
+            </div>
+            <div class="col-md-6">
                 <div class="form-group">
                     <label>Genre</label>
-                    @Html.TextBoxFor(m => m.Genre, new { @class = "form-control", placeholder = "Enter Genre" })
+                    @Html.TextBoxFor(m => m.Genre, new { @class = "form-control", placeholder = "Enter Genre", required = "required" })
+                    @Html.ValidationMessageFor(m => m.Genre, "", new { @class = "text-danger" })
                 </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
                 <div class="form-group">
                     <label>Description</label>
-                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = "Enter Description", rows = 3 })
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = "Enter Description", rows = 3, required = "required" })
+                    @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Date and Time</label>
-                    @Html.TextBoxFor(m => m.Dateandtime, new { @class = "form-control", type = "datetime-local" })
+                    @Html.TextBoxFor(m => m.Dateandtime, new { @class = "form-control", type = "datetime-local", required = "required" })
+                    @Html.ValidationMessageFor(m => m.Dateandtime, "", new { @class = "text-danger" })
                 </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
                 <div class="form-group">
                     <label>Play Type</label>
-                    @Html.TextBoxFor(m => m.PlayType, new { @class = "form-control", placeholder = "Enter Play Type" })
+                    @Html.TextBoxFor(m => m.PlayType, new { @class = "form-control", placeholder = "Enter Play Type", required = "required" })
+                    @Html.ValidationMessageFor(m => m.PlayType, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Image</label>
-                    @Html.TextBoxFor(m => m.ImageUrl, new { @class = "form-control"})
+                    <label>Image URL</label>
+                    @Html.TextBoxFor(m => m.ImageUrl, new { @class = "form-control", placeholder = "Enter Image URL"})
+                    @Html.ValidationMessageFor(m => m.ImageUrl, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>
 
         <div class="row mt-4">
-            <div class="col-md-12 text-center">
-                <button type="submit" class="btn btn-success btn-lg">Add Play</button>
+            <div class="col-md-12 d-flex justify-content-end">
+                <button type="submit" class="btn btn-success me-2">Add Play</button>
+                <a href="@Url.Action("Index", "Play")" class="btn btn-outline-success">Back to List</a>
             </div>
         </div>
     </div>

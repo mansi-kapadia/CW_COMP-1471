@@ -20,7 +20,12 @@ namespace CW_COMP_1471.Models
         public string Description { get; set; }
 
         [Required]
-        [Column("pricingid")]
-        public int PricingId { get; set; }
+        [Column("minticketqty")]
+        public int MinTicketQty { get; set; }
+
+        [Required]
+        [Column("freeticketcount")]
+        public int FreeTicketCount { get; set; }
+
     }
 }

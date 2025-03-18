@@ -28,11 +28,11 @@ namespace CW_COMP_1471.Models
         [Column("expirydate", TypeName = "date")]
         public DateTime ExpiryDate { get; set; }
 
-        [Required]
-        [Column("packageid")]
-        public int PackageId { get; set; }
+        [Column("isforkids")]
+        public bool IsForKids { get; set; } = false;
 
-        [ForeignKey("PackageId")]
-        public Package? Package { get; set; }
+        [Column("isforpensioners")]
+        public bool IsForPensioners { get; set; } = false;
+       
     }
 }

@@ -36,8 +36,8 @@ namespace CW_COMP_1471.Services
                 discount.Description = updatedDiscount.Description;
                 discount.DiscountAmount = updatedDiscount.DiscountAmount;
                 discount.ExpiryDate = updatedDiscount.ExpiryDate;
-                discount.PackageId = updatedDiscount.PackageId;
-
+                discount.IsForKids = updatedDiscount.IsForKids;
+                discount.IsForPensioners = updatedDiscount.IsForPensioners;
                 _context.SaveChanges();
             }
         }

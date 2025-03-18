@@ -26,6 +26,8 @@ namespace CW_COMP_1471.Services
 
         public void Add(Play play)
         {
+            if (string.IsNullOrEmpty(play.ImageUrl))
+                play.ImageUrl = "https://cdn3.iconfinder.com/data/icons/online-states/150/Photos-1024.png";
             play.Dateandtime = play.Dateandtime.ToUniversalTime();
             _context.Plays.Add(play);
             _context.SaveChanges();
@@ -41,8 +43,7 @@ namespace CW_COMP_1471.Services
                 existingPlay.Description = play.Description;
                 existingPlay.Dateandtime = play.Dateandtime.ToUniversalTime(); ;
                 existingPlay.PlayType = play.PlayType;
-                //existingPlay.PackageId = play.PackageId;
-
+                existingPlay.ImageUrl = play.ImageUrl;
                 _context.SaveChanges();
             }
         }

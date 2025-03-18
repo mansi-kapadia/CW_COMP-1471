@@ -1,16 +1,16 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 html, body {
@@ -18,17 +18,32 @@ html, body {
     margin: 0;
     display: flex;
     flex-direction: column;
-  }
+    overflow: auto;
+}
 
 body {
-  margin-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 2.5rem;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('https://www.gre.ac.uk/__data/assets/image/0025/119653/varieties/v800.jpg');
+    background-size: contain;
+    background-position: center;
+    background-attachment: fixed;
+    /*min-height: 80vh;*/
+    flex: 1;
+    padding-bottom: 3rem;
+    overflow-y: auto;
+}
+
+h4 {
+    color: #333;
+    font-weight: bold;
 }
 
 .img-fixed {
-    height: 200px; /* Set a fixed height */
-    object-fit: cover; /* Ensures the image covers the area without distortion */
-    width: 100%; /* Ensures it spans the full width of the card */
-    border-top-left-radius: 8px; /* Optional: matches Bootstrap card border-radius */
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+    border-top-left-radius: 8px;
     border-top-right-radius: 8px;
 }
 
@@ -111,19 +126,149 @@ body {
 }
 
 footer {
-    margin-top: auto; /* Push the footer to the bottom */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    line-height: 2.5rem;
+    height: 2.5rem;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
+
 #navbarBrand {
     font-family: 'Arial', sans-serif;
     font-size: 20px;
     font-weight: 600;
-    color: #ff6f61; /* Vibrant coral color for a joyful feel */
+    color: #ff6f61;
     text-decoration: none;
     padding: 8px 12px;
     transition: color 0.3s ease, transform 0.2s ease;
 }
 
-#navbarBrand:hover {
-    color: #555; /* Slightly lighter shade for hover effect */
-    transform: scale(1.05); /* Subtle zoom effect */
+    #navbarBrand:hover {
+        color: #555;
+        transform: scale(1.05);
+    }
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+    .table thead {
+        background-color: rgba(40, 167, 69, 0.9);
+        color: white;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: rgba(248, 249, 250, 0.8);s
+    }
+
+    .table a.btn {
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 4px;
+        transition: background 0.3s ease-in-out;
+        opacity: 0.9;
+    }
+
+        .table a.btn:hover {
+            opacity: 1;
+        }
+
+.login-box {
+    width: 600px; 
+    max-width: 90%;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;    
+}
+
+.login-box {
+    width: 800px;
+    max-width: 90%; 
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+}
+
+
+.info-section {
+    text-align: center;
+    padding: 20px;
+}
+
+
+.login-form {
+    background: #28a745;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px;
+}
+    
+    .login-form label,
+    .login-form input,
+    .login-form button {
+        color: white;
+    }
+    
+    .login-form .form-control {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 1px solid white;
+        color: white;
+    }
+
+        .login-form .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+    .login-form button {
+        background-color: white;
+        color: #28a745;
+        border: none;
+    }
+
+        .login-form button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+
+.create-edit-form {
+    background-color: #ffffff; 
+    border-radius: 10px; 
+    padding: 2rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 700px; 
+    width: 100%;
+    margin: 2rem auto;
+}
+
+    .create-edit-form label {
+        color: #333;
+    }
+
+.border.rounded.shadow-sm {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.package-summary {
+    background: rgba(240, 255, 240, 0.9);
+    border-left: 5px solid #28a745;
+    padding: 15px;
+    font-weight: bold;
+}
+
+.input-group .form-control {
+    background-color: #fff;
+    color: #000; 
 }

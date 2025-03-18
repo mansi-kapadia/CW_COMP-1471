@@ -10,7 +10,7 @@ namespace CW_COMP_1471.Models
         [Key]
         [Column("pricingid")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Pricingid { get; set; }
+        public int PricingId { get; set; }
 
         [Required]
         [Column("band")]
@@ -20,12 +20,6 @@ namespace CW_COMP_1471.Models
         [Required]
         [Column("price", TypeName = "numeric(10,2)")]
         public double Price { get; set; }
-
-        [Required]
-        [Column("playid")]
-        public int PlayId { get; set; }
-
-        [NotMapped]
-        public SelectList? Plays { get; set; }
+       
     }
 }

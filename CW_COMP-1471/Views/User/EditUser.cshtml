@@ -1,57 +1,105 @@
-﻿@model User
+﻿@using CW_COMP_1471.Services
+@model User
 
 @{
     ViewBag.Title = "Edit User";
 }
 
-<h2>Edit User</h2>
-
 @using (Html.BeginForm("Edit", "User", FormMethod.Post))
 {
-    @Html.HiddenFor(m => m.Id)
+    <div class="container create-edit-form">
+        <h2 class="mb-4">Edit User</h2>
 
-    <div class="form-group">
-        <label>First Name</label>
-        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+        @Html.HiddenFor(m => m.Id) <!-- Ensure User ID is included for updates -->
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>First Name</label>
+                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "Enter First Name", required = "required" })
+                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Last Name</label>
+                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Enter Last Name", required = "required" })
+                    @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Username</label>
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Enter Username", @readonly = "readonly" }) <!-- Prevent changing username -->
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Email</label>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter Email", required = "required", type = "email" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "Enter Phone Number", required = "required", type = "tel" })
+                    @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address</label>
+                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Enter Address", required = "required" })
+                    @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Role</label>
+                    @if (Model.Roles != null && Model.Roles.Any())
+                    {
+                        @Html.DropDownListFor(m => m.RoleId, Model.Roles, "Select a Role", new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(m => m.RoleId, "", new { @class = "text-danger" })
+                    }
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Password (Leave blank to keep current)</label>
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter new password (optional)" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12 d-flex justify-content-end">
+                <button type="submit" class="btn btn-success me-2">Update User</button>
+                <a href="@Url.Action("Index", "User")" class="btn btn-outline-success">Back to List</a>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label>Last Name</label>
-        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
-    </div>
-
-    <div class="form-group">
-        <label>UserName</label>
-        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-    </div>
-
-    <div class="form-group">
-        <label>Password</label>
-        @Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
-    </div>
-
-    <div class="form-group">
-        <label>Email</label>
-        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-    </div>
-
-    <div class="form-group">
-        <label>Phone Number</label>
-        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
-    </div>
-
-    <div class="form-group">
-        <label>Address</label>
-        @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
-    </div>
-
-    <div class="form-group">
-        <label>Role</label>
-       @if (Model.Roles != null && Model.Roles.Any())
-       {
-            @Html.DropDownListFor(m => m.RoleId, Model.Roles, "Select a Role", new { @class = "form-control" })
-       }
-    </div>
-
-    <button type="submit" class="btn btn-primary">Update</button>
+    @if (ViewBag.Errors != null)
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var error in ViewBag.Errors)
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        </div>
+    }
 }

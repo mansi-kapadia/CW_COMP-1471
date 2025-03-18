@@ -20,7 +20,7 @@ namespace CW_COMP_1471.Services
         {
             if(_context.Users.Any())
             {
-                return _context.Users.ToList();
+                return _context.Users.Include(x => x.Role).ToList();
             }
             return Enumerable.Empty<User>();
         }
@@ -47,7 +47,8 @@ namespace CW_COMP_1471.Services
                 user.FirstName = updatedUser.FirstName;
                 user.LastName = updatedUser.LastName;
                 user.UserName = updatedUser.UserName;
-                user.Password = updatedUser.Password;
+                if(!string.IsNullOrEmpty(updatedUser.Password)) // if user leaves password empty keep the old password
+                    user.Password = updatedUser.Password;
                 user.RoleId = updatedUser.RoleId;
                 user.Email = updatedUser.Email;
                 user.PhoneNumber = updatedUser.PhoneNumber;
@@ -80,9 +81,6 @@ namespace CW_COMP_1471.Services
         {
             if (_context.Users.Any(u => u.UserName == model.UserName))
                 return false;
-
-            // incrypt password -- will do later 
-            //model.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
             _context.Users.Add(model);
             _context.SaveChanges();

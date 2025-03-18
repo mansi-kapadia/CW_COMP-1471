@@ -7,8 +7,15 @@
 <div class="order-confirmation">
     <p>Thank you for your purchase!</p>
     <p>Your payment was successful.</p>
-    <p>Order Number: <strong>#12345</strong></p>
-    <p>We have sent a confirmation email to your registered email address.</p>
+    <p>Reference Number: <strong id="refNumber">Loading...</strong></p> <!-- Dynamically updated -->
 </div>
 
 <a href="/" class="btn btn-primary">Return to Home</a>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get("PaymentReferenceNumber");
+        document.getElementById("refNumber").innerText = data.paymentReferenceNumber;
+    });
+</script>

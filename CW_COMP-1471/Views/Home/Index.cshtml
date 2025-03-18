@@ -23,9 +23,9 @@
                             <div class="input-group" style="width: 120px;">
                                 <button class="btn btn-outline-secondary" type="button" onclick="decrement(@play.PlayId)">-</button>
                                 <input type="text" id="ticketCount-@play.PlayId" class="form-control text-center" value="1" readonly />
-                                <button class="btn btn-outline-secondary" type="button" onclick="increment(@play.PlayId)">+</button>
+                                <button class="btn btn-outline-success" type="button" onclick="increment(@play.PlayId)">+</button>
                             </div>
-                            <button class="btn btn-primary" onclick="addToBooking(@play.PlayId)">Add to Cart</button>
+                            <button class="btn btn-success" onclick="addToBooking(@play.PlayId)">Add to Cart</button>
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
         PlayId: PlayId,
     };
 
-    fetch('api/bookings', {
+    fetch('/api/bookings', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

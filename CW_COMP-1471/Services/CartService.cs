@@ -21,7 +21,7 @@ public class CartService : ICartService
             .Where(b => b.UserId == userId && !b.FinalCheckout)
             .Select(b => new CartBooking
             {
-                BookingId = b.BookingId,  
+                BookingId = b.BookingId,
                 PackageId = b.PackageId,
                 DiscountId = b.DiscountId,
             }).FirstOrDefaultAsync();
@@ -29,7 +29,7 @@ public class CartService : ICartService
         if (booking != null)
         {
             booking.Tickets = await _context.Tickets
-                        .Include(t => t.Play) 
+                        .Include(t => t.Play)
                         .Include(t => t.Pricing)
                         .Where(t => t.BookingId == booking.BookingId)
                         .Select(t => new TicketModel
@@ -41,6 +41,7 @@ public class CartService : ICartService
                             PricingType = t.Pricing != null ? t.Pricing.Band : "",
                             PricingId = t.PricingId,
                             Price = t.Pricing != null ? t.Pricing.Price : 0,
+                            PlayId = t.PlayId
                         }).ToListAsync();
 
             var discount = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountId == booking.DiscountId);
@@ -53,21 +54,31 @@ public class CartService : ICartService
         }
 
         var pricingTypes = await _context.Pricings.ToListAsync();
+
         newCart.PricingTypes = pricingTypes;
 
         return newCart;
     }
 
-    public async Task<Discount> ApplyDiscount(int bookingId, string code)
+    public async Task<Discount> ApplyDiscount(int bookingId, string code, List<int> Ages)
     {
         var discount = await _context.Discounts.FirstOrDefaultAsync(d => d.Code == code);
 
         if (discount == null)
             return null;
 
+        if (discount.IsForKids && Ages.Count(x => x < 12) == 0)
+            throw new Exception("Discount is only valid for Kids below age 12.");
+
+        if (discount.IsForPensioners && Ages.Count(x => x > 60) == 0)
+            throw new Exception("Discount is only valid for Pensioners above age 60.");
+
+        if (discount.ExpiryDate < DateTime.Now)
+            throw new Exception("Discount Code is Expired!");
+
         var booking = await _context.Bookings.FirstOrDefaultAsync(x => x.BookingId == bookingId);
 
-        if(booking != null)
+        if (booking != null)
         {
             booking.DiscountId = discount.DiscountId;
             _context.SaveChangesAsync();
@@ -76,7 +87,7 @@ public class CartService : ICartService
         return discount;
     }
 
-    public async Task<bool> UpdateTicketsAsync(List<TicketUpdateRequest> tickets)
+    public async Task<bool> UpdateBookingAsync(List<TicketUpdateRequest> tickets)
     {
         if (tickets == null || tickets.Count == 0)
             return false;
@@ -94,8 +105,47 @@ public class CartService : ICartService
             }
         }
 
+        // update booking Status
+        Booking booking = await _context.Bookings.FirstOrDefaultAsync(x => x.BookingId == dbTickets.FirstOrDefault().BookingId);
+
+        booking.Amount = dbTickets.Sum(x => x.Pricing != null ? (decimal)x.Pricing.Price : 0.0m)
+               - (booking.Discount?.DiscountAmount ?? 0.0m);
+        booking.PaymentStatus = "In Prog";
         await _context.SaveChangesAsync();
         return true;
     }
 
+
+    public async Task<Payment> CheckoutCart(CheckoutCart checkout)
+    {
+        // Get the booking based on BookingId
+        Booking booking = await _context.Bookings
+                                .FirstOrDefaultAsync(b => b.BookingId == checkout.BookingId);
+
+        if (booking == null)
+            throw new Exception("Booking not found.");
+
+        booking.FinalCheckout = true;
+        booking.PaymentStatus = "Paid";
+
+        decimal discount = booking.Discount?.DiscountAmount ?? 0.0m;
+
+        // Create a new Payment entry
+        Payment payment = new Payment
+        {
+            BookingId = checkout.BookingId,
+            Amount = booking.Amount,
+            Discount = discount,
+            PaymentReferenceNumber = Guid.NewGuid(),
+            CardNumber = checkout.CreditCardNumber,
+            ExpiryDate = checkout.ExpiryDate,
+            CVV = "XXX",
+            PaymentDate = DateTime.UtcNow
+        };
+
+        _context.Payments.Add(payment);
+        await _context.SaveChangesAsync();
+
+        return payment;
+    }
 }

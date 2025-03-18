@@ -6,7 +6,10 @@ namespace CW_COMP_1471.Models
 {
     public class LoginViewModel
     {
+        [Required(ErrorMessage = "Username is required")]
         public string Username { get; set; }
+
+        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
     }
 
@@ -25,9 +28,9 @@ namespace CW_COMP_1471.Models
         [Required]
         [Column("username")]
         public string UserName { get; set; }
-        [Required]
+
         [Column("password")]
-        public string Password { get; set; }
+        public string? Password { get; set; }
         [Required]
         [Column("roleid")]
         public int RoleId { get; set; }
@@ -42,7 +45,7 @@ namespace CW_COMP_1471.Models
         [NotMapped]
         public SelectList? Roles { get; set; }
 
-        //[NotMapped]
-        //public Role? Role { get; set; } = new Role();
+        [ForeignKey("RoleId")]
+        public virtual Role? Role { get; set; }
     }
 }
