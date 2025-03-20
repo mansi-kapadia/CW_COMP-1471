@@ -11,13 +11,16 @@ namespace CW_COMP_1471.Controllers
         private static IPlayService playService;
         public PricingController(IPricingService _pricingService, IPlayService _playService)
         {
+            // dependency injection
             pricingService = _pricingService;
             playService = _playService;
         }
-
+        
+        // show list of pricing-bands
         public IActionResult Index()
         {
-            return View(pricingService.GetPricings());
+            var res = pricingService.GetPricings();
+            return View(res);
         }
 
         // Show Add Pricing band Form
@@ -28,7 +31,7 @@ namespace CW_COMP_1471.Controllers
             return View(model);
         }
 
-
+        //save a new pricing band
         [HttpPost]
         public ActionResult Create(PricingBand Pricing)
         {
@@ -45,6 +48,7 @@ namespace CW_COMP_1471.Controllers
             return RedirectToAction("Index");
         }
 
+        // open edit pricing-band page
         public ActionResult EditPricing(int id)
         {
             var pricing = pricingService.GetById(id);
@@ -59,6 +63,7 @@ namespace CW_COMP_1471.Controllers
             throw new NotImplementedException();
         }
 
+        // save updated pricing details
         [HttpPost]
         public ActionResult Edit(PricingBand Pricing)
         {
@@ -75,6 +80,7 @@ namespace CW_COMP_1471.Controllers
             return RedirectToAction("Index");
         }
 
+        // delete pricing band
         public ActionResult Delete(int id)
         {
             pricingService.Delete(id);

@@ -9,6 +9,7 @@ namespace CW_COMP_1471.Controllers
         private static IPackageService packageService;
         public PackageController(IPackageService _packageService)
         {
+            // dependency injection
             packageService = _packageService;
         }
 
@@ -25,6 +26,7 @@ namespace CW_COMP_1471.Controllers
             return View();
         }
 
+        // save a new Package 
         [HttpPost]
         public IActionResult Create(Package package)
         {
@@ -36,6 +38,7 @@ namespace CW_COMP_1471.Controllers
             return View(package);
         }
 
+        // open edit package page
         public IActionResult EditPackage(int id)
         {
             var package = packageService.GetById(id);
@@ -45,6 +48,7 @@ namespace CW_COMP_1471.Controllers
             return View(package);
         }
 
+        // save updated package details
         [HttpPost]
         public IActionResult Edit(Package package)
         {
@@ -56,6 +60,7 @@ namespace CW_COMP_1471.Controllers
             return View(package);
         }
 
+        //delete package by id
         public IActionResult Delete(int id)
         {
             var package = packageService.GetById(id);

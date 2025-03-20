@@ -11,21 +11,23 @@ namespace CW_COMP_1471.Controllers
 
         public RoleController(IRoleService _roleService)
         {
+            // dependency injection
             roleService = _roleService;
         }
 
+        //show list of roles
         public ActionResult Index()
         {
             return View(roleService.GetRoles(false));
         }
 
-        // Show Add User Form
+        // Show Add role Form
         public ActionResult CreateRole()
         {
             return View();
         }
 
-
+        // save a new role
         [HttpPost]
         public ActionResult Create(Role role)
         {
@@ -42,6 +44,7 @@ namespace CW_COMP_1471.Controllers
             return RedirectToAction("Index");
         }
 
+        // open edit role page
         public ActionResult EditRole(int id)
         {
             var role = roleService.GetById(id);
@@ -56,6 +59,7 @@ namespace CW_COMP_1471.Controllers
             throw new NotImplementedException();
         }
 
+        // save updated role 
         [HttpPost]
         public ActionResult Edit(Role role)
         {

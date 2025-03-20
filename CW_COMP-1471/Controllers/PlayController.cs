@@ -10,9 +10,11 @@ namespace CW_COMP_1471.Controllers
 
         public PlayController(IPlayService _playService)
         {
+            // dependency injection
             playService = _playService;
         }
 
+        // show list of plays
         public IActionResult Index()
         {
             return View(playService.GetAllPlays());
@@ -25,6 +27,7 @@ namespace CW_COMP_1471.Controllers
         }
 
 
+        // save a new play
         [HttpPost]
         public ActionResult Create(Play Play)
         {
@@ -41,6 +44,7 @@ namespace CW_COMP_1471.Controllers
             return RedirectToAction("Index");
         }
 
+        // open edit play page 
         public ActionResult EditPlay(int id)
         {
             var Play = playService.GetById(id);
@@ -55,6 +59,7 @@ namespace CW_COMP_1471.Controllers
             throw new NotImplementedException();
         }
 
+        // save updated play details
         [HttpPost]
         public ActionResult Edit(Play Play)
         {
@@ -70,6 +75,7 @@ namespace CW_COMP_1471.Controllers
             return RedirectToAction("Index");
         }
 
+        //delete play by id
         public ActionResult Delete(int id)
         {
             playService.DeletePlay(id);

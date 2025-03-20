@@ -12,6 +12,7 @@ namespace CW_COMP_1471.Controllers
 
         public UserController(IUserService _userService, IRoleService _roleService)
         {
+            // dependency injection
             userService = _userService; 
             roleService = _roleService;
         }
@@ -31,6 +32,7 @@ namespace CW_COMP_1471.Controllers
             return View(model);
         }
 
+        //save a new User
         [HttpPost]
         public ActionResult Create(User user)
         {
@@ -47,6 +49,7 @@ namespace CW_COMP_1471.Controllers
             return RedirectToAction("Index");
         }
         
+        // open edit user page
         public ActionResult EditUser(int id)
         {
             var user = userService.GetUserById(id);
@@ -58,12 +61,13 @@ namespace CW_COMP_1471.Controllers
 
             return View(user);
         }
-
+        
         private ActionResult HttpNotFound()
         {
             throw new NotImplementedException();
         }
 
+        // save edit user details
         [HttpPost]
         public ActionResult Edit(User user)
         {
@@ -80,6 +84,7 @@ namespace CW_COMP_1471.Controllers
             return RedirectToAction("Index");
         }
 
+        //delet user by id
         public ActionResult Delete(int id)
         {
             userService.DeleteUser(id);

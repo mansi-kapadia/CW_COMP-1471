@@ -66,6 +66,13 @@ namespace CW_COMP_1471.Services
                 {
                     _context.Tickets.Remove(ticket);
                 }
+
+                List<PricingBand> bands = _context.Pricings.Where(x => x.PlayId == id).ToList();
+                foreach (PricingBand band in bands)
+                {
+                    _context.Pricings.Remove(band);
+                }
+
                 _context.Plays.Remove(play);
                 _context.SaveChanges();
             }

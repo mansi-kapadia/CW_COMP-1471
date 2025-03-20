@@ -15,6 +15,7 @@ namespace CW_COMP_1471.Controllers
 
         public BookingController(IBookingService bookingService, ICartService cartService)
         {
+            // dependency injection
             _bookingService = bookingService;
             _cartService = cartService;
 

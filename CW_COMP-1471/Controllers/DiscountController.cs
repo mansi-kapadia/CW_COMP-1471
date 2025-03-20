@@ -13,6 +13,7 @@ namespace CW_COMP_1471.Controllers
         private readonly ICartService cartService;
         public DiscountController(IDiscountService _discountService, ICartService _cartService)
         {
+            // dependency injection
             discountService = _discountService;
             cartService = _cartService;
         }
@@ -32,8 +33,8 @@ namespace CW_COMP_1471.Controllers
         }
 
         // Post discount Details
-        [HttpPost]
-        public ActionResult Create(Discount discount)
+        [HttpPost("Create")]
+        public ActionResult Create([FromForm] Discount discount)
         {
             if (!ModelState.IsValid)
             {
@@ -57,8 +58,8 @@ namespace CW_COMP_1471.Controllers
         }
 
         // Post updated Discount
-        [HttpPost]
-        public ActionResult Edit(Discount discount)
+        [HttpPost("Edit")]
+        public ActionResult Edit([FromForm] Discount discount)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +72,7 @@ namespace CW_COMP_1471.Controllers
         }
 
         // delete discount
-        [HttpDelete]
+        [HttpGet("Delete/{id}")]
         public ActionResult Delete(int id)
         {
             discountService.DeleteDiscount(id);

@@ -206,7 +206,7 @@
     function proceedToCheckout() {
 
         if (!updatedTickets.length) {
-            if (confirm("No changes detected. Proceed to checkout?")) {
+            if (confirm("Proceed to checkout?")) {
                 window.location.href = "/api/checkout";
             }
             return;
