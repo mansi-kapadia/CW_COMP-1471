@@ -42,23 +42,6 @@ namespace CW_COMP_1471.Controllers
             }
         }
 
-        // Get number of items in count 
-        [HttpGet("/api/bookings/getticketcount")]
-        public async Task<int> GetTicketCount()
-        {
-            try
-            {
-                int userId = (int)HttpContext.Session.GetInt32("LoggedInUser");
-
-                int TicketCount = await _bookingService.GetTicketCount(userId);
-                return TicketCount;
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
-        }
-
         // update Age
         [HttpPost("update-bookings")]
         public async Task<IActionResult> UpdateTickets([FromBody] BulkTicketUpdateRequest request)

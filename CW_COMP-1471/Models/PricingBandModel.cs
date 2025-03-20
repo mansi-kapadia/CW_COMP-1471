@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CW_COMP_1471.Models
 {
-    [Table("pricingband")]
+    [Table("pricingbands")]
     public class PricingBand
     {
         [Key]

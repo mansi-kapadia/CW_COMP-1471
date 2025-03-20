@@ -7,15 +7,7 @@
 <div class="order-confirmation">
     <p>Thank you for your purchase!</p>
     <p>Your payment was successful.</p>
-    <p>Reference Number: <strong id="refNumber">Loading...</strong></p>
+    <p>Reference Number: <b>@ViewBag.PaymentReferenceNumber</b></strong></p>
 </div>
 
 <a href="/" class="btn btn-primary">Return to Home</a>
-
-<script>
-        document.addEventListener("DOMContentLoaded", function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const paymentId = urlParams.get("paymentReferenceNumber");
-        document.getElementById("refNumber").innerText = data.paymentReferenceNumber;
-    });
-</script>

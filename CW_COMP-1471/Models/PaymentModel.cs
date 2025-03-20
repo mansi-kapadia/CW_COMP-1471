@@ -22,17 +22,17 @@ namespace CW_COMP_1471.Models
         [Column("discount", TypeName = "decimal(10,2)")]
         public decimal Discount { get; set; } = 0.00m;
 
-        [Column("final_amount", TypeName = "decimal(10,2)")]
+        [Column("finalamount", TypeName = "decimal(10,2)")]
         public decimal FinalAmount => Amount - Discount;
 
         [Required]
         [StringLength(16)]
-        [Column("card_number")]
+        [Column("cardnumber")]
         public string CardNumber { get; set; }
 
         [Required]
         [StringLength(5)]
-        [Column("expiry_date")]
+        [Column("expirydate")]
         public string ExpiryDate { get; set; }
 
         [Required]
@@ -40,7 +40,7 @@ namespace CW_COMP_1471.Models
         [Column("cvv")]
         public string CVV { get; set; }
 
-        [Column("payment_date")]
+        [Column("paymentdate")]
         public DateTime PaymentDate { get; set; } = DateTime.UtcNow; // Default to current timestamp
 
         [Column("paymentreferencenumber")]

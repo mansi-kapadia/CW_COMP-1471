@@ -45,10 +45,7 @@
                         <!-- Bookings Button -->
                         <div class="ms-auto">
                             <a class="btn btn-outline-success position-relative me-3" id="bookingButton">
-                                My Bookings
-                                <span id="ticketCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    0
-                                </span>
+                                My Bookings                               
                             </a>
                         </div>
                     }
@@ -92,12 +89,8 @@
     <script>
         let ticketItems = [];
 
-        function updateTicketCount() {
-            let totalCount = ticketItems.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById("ticketCount").innerText = totalCount;
-        }
-
         function addToTicket(PlayId, inputId) {
+            
             let quantity = parseInt(document.getElementById(inputId).value) || 1;
         
             let existingItem = ticketItems.find(item => item.playId === PlayId);
@@ -106,31 +99,11 @@
             } else {
                 ticketItems.push({ playId: PlayId, quantity });
             }
-
-            updateTicketCount();
+            
             alert(`Added to Bookings! Current Items: ${ticketItems.length}`);
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-            // Fetch Ticket count
-            fetch('/api/bookings/getticketcount', { 
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include'
-            })
-            .then(response => response.json())
-            .then(data => {
-
-                let countElement = document.getElementById("ticketCount");
-
-                console.log(countElement,data);
-                countElement.textContent = data || 0;
-                if (data.count === 0) {
-                    countElement.style.display = 'none';
-                }
-            })
-            .catch(error => console.error('Error fetching ticket count:', error));
-
             // Redirect to Index when the button is clicked
             document.getElementById("bookingButton").addEventListener("click", function (event) {
                 event.preventDefault();

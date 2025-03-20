@@ -97,20 +97,5 @@ namespace CW_COMP_1471.Services
 
             return booking;
         }
-
-        // Get count of tickets in the cart 
-        public async Task<int> GetTicketCount(int UserId)
-        {
-            var existingBooking = await _context.Bookings
-                .FirstOrDefaultAsync(b => b.UserId == UserId && !b.FinalCheckout);
-
-            int existingTicketCount = 0;
-
-            if (existingBooking != null) existingTicketCount = await _context.Tickets
-                            .CountAsync(t => t.BookingId == existingBooking.BookingId);
-
-            return existingTicketCount;
-        }
-
     }
 }

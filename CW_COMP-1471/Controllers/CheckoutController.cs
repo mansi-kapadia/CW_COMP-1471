@@ -60,7 +60,8 @@ public class CheckoutController : Controller
                 success = true,
                 message = "Payment successful!",
                 paymentId = payment.PaymentId,
-                redirectUrl = $"/OrderConfirmation?paymentReferenceNumber={payment.PaymentReferenceNumber.ToString()}"
+                redirectUrl = $"/orderconfirmation/{payment.PaymentReferenceNumber}"
+
             });
 
         }

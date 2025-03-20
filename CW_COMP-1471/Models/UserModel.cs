@@ -17,7 +17,7 @@ namespace CW_COMP_1471.Models
     public class User
     {
         [Key]
-        [Column("userid")]
+        [Column("id")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; } = 0;
 
@@ -37,7 +37,7 @@ namespace CW_COMP_1471.Models
         [Required]
         [Column("email")]
         public string Email { get; set; }
-        [Column("phoneno")]
+        [Column("phonenumber")]
         public string PhoneNumber { get; set; }
         [Column("address")]
         public string Address { get; set; }

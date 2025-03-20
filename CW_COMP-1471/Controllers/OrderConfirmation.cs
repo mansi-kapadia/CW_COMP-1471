@@ -7,8 +7,10 @@ namespace CW_COMP_1471.Controllers
     public class OrderConfirmationController : Controller
     {
         // Display order confirmation page
-        public IActionResult Index()
+        [HttpGet("{paymentReferenceNumber}")]
+        public IActionResult Index(string paymentReferenceNumber)
         {
+            ViewBag.PaymentReferenceNumber = paymentReferenceNumber;
             return View();
         }
     }

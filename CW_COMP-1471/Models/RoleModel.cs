@@ -7,7 +7,7 @@ namespace CW_COMP_1471.Models
     public class Role
     {
         [Key] 
-        [Column("roleid")]
+        [Column("id")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 

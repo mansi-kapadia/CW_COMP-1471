@@ -116,9 +116,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    debugger;
                     console.log("data",data);
                     alert("Payment successful! Redirecting to Order Confirmation...");
-                    window.location.href = `/OrderConfirmation?paymentReferenceNumber=${data.paymentReferenceNumber}`;
+                    window.location.href = data.redirectUrl;
                 } else {
                     alert("Payment failed: " + data.message);
                 }

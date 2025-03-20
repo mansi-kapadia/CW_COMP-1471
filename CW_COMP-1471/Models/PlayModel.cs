@@ -25,10 +25,10 @@ namespace CW_COMP_1471.Models
         public string? ImageUrl { get; set; }
 
         [NotMapped]
-        public IEnumerable<Review> Reviews { get; set; }
+        public IEnumerable<Review>? Reviews { get; set; }
 
         [NotMapped]
-        public IEnumerable<PricingBand> PricingBands { get; set; }
+        public IEnumerable<PricingBand>? PricingBands { get; set; }
 
     }
 

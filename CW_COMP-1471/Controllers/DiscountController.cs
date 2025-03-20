@@ -18,12 +18,14 @@ namespace CW_COMP_1471.Controllers
         }
 
         // show all discount
+        [HttpGet]
         public IActionResult Index()
         {
             return View(discountService.GetAllDiscounts());
         }
 
         // Create new Discount Page
+        [HttpGet("create")]
         public ActionResult CreateDiscount()
         {
             return View();
@@ -44,6 +46,7 @@ namespace CW_COMP_1471.Controllers
         }
 
         // Edit Discount Page
+        [HttpGet("edit")]
         public ActionResult EditDiscount(int id)
         {
             var discount = discountService.GetById(id);
@@ -67,7 +70,8 @@ namespace CW_COMP_1471.Controllers
             return RedirectToAction("Index");
         }
 
-        // delete discount 
+        // delete discount
+        [HttpDelete]
         public ActionResult Delete(int id)
         {
             discountService.DeleteDiscount(id);
