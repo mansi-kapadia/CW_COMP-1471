@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Pricing>
+﻿@model IEnumerable<PricingBand>
 
 @{
     ViewData["Title"] = "Pricing List";
@@ -10,6 +10,7 @@
         <tr>
             <th>Band</th>
             <th>Price</th>
+            <th>Play</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -19,6 +20,7 @@
             <tr>
                 <td>@pricing.Band</td>
                 <td>@pricing.Price</td>
+                <td>@pricing.Play.Title</td>
                <td>
                     <a href="@Url.Action("EditPricing", "Pricing", new { id = pricing.PricingId })" class="icon-btn text-warning m-1">
                         <i class="fas fa-edit"></i>

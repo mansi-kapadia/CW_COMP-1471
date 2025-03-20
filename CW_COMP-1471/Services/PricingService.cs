@@ -1,4 +1,5 @@
 ﻿using CW_COMP_1471.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,26 +15,26 @@ namespace CW_COMP_1471.Services
         }
 
         // Get All Pricing
-        public IEnumerable<Pricing> GetPricings()
+        public IEnumerable<PricingBand> GetPricings()
         {
-            return _context.Pricings.ToList();
+            return _context.Pricings.Include(x => x.Play).ToList();
         }
 
         // Get Pricing by ID
-        public Pricing? GetById(int id)
+        public PricingBand? GetById(int id)
         {
             return _context.Pricings.Find(id);
         }
 
         // Add new pricing 
-        public void Add(Pricing pricing)
+        public void Add(PricingBand pricing)
         {
             _context.Pricings.Add(pricing);
             _context.SaveChanges();
         }
 
         // Update Pricing details
-        public void Update(Pricing updatedPricing)
+        public void Update(PricingBand updatedPricing)
         {
             var pricing = _context.Pricings.Find(updatedPricing.PricingId);
             if (pricing != null)

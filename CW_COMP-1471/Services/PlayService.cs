@@ -16,7 +16,14 @@ namespace CW_COMP_1471.Services
 
         public IEnumerable<Play> GetAllPlays()
         {
-            return _context.Plays.ToList();
+            var plays = _context.Plays.ToList();
+
+            foreach (var play in plays)
+            {
+                play.PricingBands = _context.Pricings.Where(x => x.PlayId == play.PlayId);
+            }
+
+            return plays;
         }
 
         public Play? GetById(int id)
@@ -53,6 +60,12 @@ namespace CW_COMP_1471.Services
             var play = _context.Plays.Find(id);
             if (play != null)
             {
+
+                List<Ticket> tickets = _context.Tickets.Where(x => x.PlayId == id).ToList();
+                foreach (Ticket ticket in tickets)
+                {
+                    _context.Tickets.Remove(ticket);
+                }
                 _context.Plays.Remove(play);
                 _context.SaveChanges();
             }

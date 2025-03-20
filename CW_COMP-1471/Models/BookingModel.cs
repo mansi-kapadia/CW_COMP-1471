@@ -58,15 +58,7 @@ namespace CW_COMP_1471.Models
         public int UserId { get; set; }        
         public int Quantity { get; set; }
         public int PlayId { get; set; }
-    }
-
-    public class CartItemModel
-    {
-        public int TicketId { get; set; }
-        public string PlayName { get; set; }
-        public string SeatNumber { get; set; }
-        public int Age { get; set; }
-        public string PricingType { get; set; }
+        public decimal Price { get; set; }
     }
 
     public class BulkTicketUpdateRequest

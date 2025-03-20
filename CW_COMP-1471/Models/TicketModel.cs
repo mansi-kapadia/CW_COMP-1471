@@ -14,8 +14,8 @@ namespace CW_COMP_1471.Models
         [Column("bookingid")]
         public int BookingId { get; set; }
 
-        [Column("pricingid")]
-        public int? PricingId { get; set; }
+        [Column("amount")]
+        public decimal Amount { get; set; }
 
         [Required]
         [Column("userid")]
@@ -41,8 +41,8 @@ namespace CW_COMP_1471.Models
         [ForeignKey("BookingId")]
         public virtual Booking Booking { get; set; }
 
-        [ForeignKey("PricingId")]
-        public virtual Pricing? Pricing { get; set; }
+        //[ForeignKey("PricingId")]
+        //public virtual Pricing? Pricing { get; set; }
 
         [ForeignKey("UserId")]
         public virtual User User { get; set; }

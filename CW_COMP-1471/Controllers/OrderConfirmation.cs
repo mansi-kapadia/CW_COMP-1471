@@ -6,6 +6,7 @@ namespace CW_COMP_1471.Controllers
     [ApiController]
     public class OrderConfirmationController : Controller
     {
+        // Display order confirmation page
         public IActionResult Index()
         {
             return View();

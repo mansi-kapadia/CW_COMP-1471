@@ -8,7 +8,7 @@ namespace CW_COMP_1471.Models
         public Discount Discount { get; set; }
         public Package Package { get; set; }
         public List<TicketModel> Tickets { get; set; }
-        public List<Pricing> PricingTypes { get; set; }
+        public List<PricingBand> PricingTypes { get; set; }
     }
 
     public class CartBooking
@@ -26,8 +26,7 @@ namespace CW_COMP_1471.Models
         public string PlayName { get; set; }
         public string SeatNumber { get; set; }
         public int Age { get; set; }
-        public string PricingType { get; set; }
-        public double Price { get; set; }
+        public decimal Amount { get; set; }
         public int PlayId { get; set; }
     }
 
@@ -44,11 +43,10 @@ namespace CW_COMP_1471.Models
         public int BookingId { get; set; }
 
         [Required]
-        //[CreditCard] // Ensures valid card number
         public string CreditCardNumber { get; set; }
 
         [Required]
-        public string ExpiryDate { get; set; } // Format: MM/YY
+        public string ExpiryDate { get; set; }
 
         [Required]
         [StringLength(3, MinimumLength = 3)]

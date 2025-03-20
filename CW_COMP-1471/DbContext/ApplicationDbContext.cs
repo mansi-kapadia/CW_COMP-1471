@@ -10,7 +10,7 @@ namespace CW_COMP_1471
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<Pricing> Pricings { get; set; }
+        public DbSet<PricingBand> Pricings { get; set; }
 
         public DbSet<Play> Plays { get; set; }
 
@@ -25,9 +25,13 @@ namespace CW_COMP_1471
         public DbSet<Ticket> Tickets { get; set; }
         
         public DbSet<Payment> Payments { get; set; }
+
+        public DbSet<Review> Reviews { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
         }
+        
     }
 }

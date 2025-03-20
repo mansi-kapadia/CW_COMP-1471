@@ -23,9 +23,7 @@ namespace CW_COMP_1471.Controllers
 
         // Show Add User Form
         public ActionResult CreateUser()
-        {
-            //var model = new User();
-            //model.Roles = new SelectList(roleService.GetRoles(), "Id", "RoleName");
+        {            
             var model = new User
             {
                 Roles = new SelectList(roleService.GetRoles(true) ?? new List<Role>(), "Id", "RoleName")

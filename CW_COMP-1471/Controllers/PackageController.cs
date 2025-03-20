@@ -12,12 +12,14 @@ namespace CW_COMP_1471.Controllers
             packageService = _packageService;
         }
 
+        // display list of packages
         public IActionResult Index()
         {
             var packages = packageService.GetAllPackages();
             return View(packages);
         }
 
+        // show create new Package page
         public IActionResult CreatePackage()
         {
             return View();

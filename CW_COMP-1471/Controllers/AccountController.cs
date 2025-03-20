@@ -18,11 +18,11 @@ namespace CW_COMP_1471.Controllers
             userService = _userService;
         }
 
-        // use this link
-        //http://www.mtutorial.com/asp.net-core-login-logout-registration-example
-
+        // Show Login Page
         public IActionResult Login()
         {
+            Response.Cookies.Delete("UserSession");
+            HttpContext.Session.Remove("LoggedInUser");
             return View();
         }
 
@@ -31,7 +31,6 @@ namespace CW_COMP_1471.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
         {
-
             if (userService.CheckPassword(model))
             {
                 User user = userService.GetUserByUsername(model.Username);
@@ -41,7 +40,6 @@ namespace CW_COMP_1471.Controllers
                     SaveUserCookie(HttpContext, user.Id);
                     HttpContext.Session.SetInt32("LoggedInUser", user.Id);
                     int? sessionUserId = HttpContext.Session.GetInt32("LoggedInUser");
-                    Console.WriteLine("Session Set: " + sessionUserId); // Should print the user ID
                 }
 
                 return RedirectToAction("Index", "Home");
@@ -59,7 +57,7 @@ namespace CW_COMP_1471.Controllers
             var model = userService.GetRegisterModel();
             return View(model);
         }
-
+        
         [HttpPost]
         public IActionResult Register(User model)
         {
@@ -82,6 +80,7 @@ namespace CW_COMP_1471.Controllers
             return View(model);
         }
 
+        // Remove cookie and Session details 
         public IActionResult Logout()
         {
             // Remove the cookie
@@ -90,6 +89,7 @@ namespace CW_COMP_1471.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        // Check if user has logged in
         public static bool IsUserLoggedIn(HttpContext httpContext)
         {
             var userCookie = httpContext.Request.Cookies["UserSession"];
@@ -113,6 +113,7 @@ namespace CW_COMP_1471.Controllers
             return false;
         }
 
+        // Save Cookie details
         public static void SaveUserCookie(HttpContext httpContext, int userId)
         {
             var cookieOptions = new CookieOptions
@@ -125,6 +126,7 @@ namespace CW_COMP_1471.Controllers
             httpContext.Response.Cookies.Append("UserSession", userId.ToString(), cookieOptions);
         }
 
+        // Check if Current user is Admin
         public static bool IsCurrentUserAdmin(HttpContext httpContext)
         {
             var sessionUserId = httpContext.Session.GetInt32("LoggedInUser");

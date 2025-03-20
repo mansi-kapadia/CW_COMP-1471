@@ -1,4 +1,4 @@
-﻿@model Pricing
+﻿@model PricingBand
 
 @{
     ViewBag.Title = "Update Pricing";
@@ -26,6 +26,17 @@
                     @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
                 </div>
             </div>
+        </div>
+
+         <div class="row">
+            <div class="form-group">
+                <label>Play</label>
+                @if (Model.Plays != null && Model.Plays.Any())
+                    {
+                        @Html.DropDownListFor(m => m.PlayId, Model.Plays, "Select a Play", new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(m => m.PricingId, "", new { @class = "text-danger" })
+                    }
+                </div>
         </div>
 
         <div class="row mt-4">

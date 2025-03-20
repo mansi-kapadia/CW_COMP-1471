@@ -7,13 +7,13 @@ namespace CW_COMP_1471.Services
     public interface IPricingService 
     {
 
-        IEnumerable<Pricing> GetPricings();
+        IEnumerable<PricingBand> GetPricings();
 
-        Pricing? GetById(int id);
+        PricingBand? GetById(int id);
 
-        void Add(Pricing pricing);
+        void Add(PricingBand pricing);
 
-        void Update(Pricing updatedPricing);
+        void Update(PricingBand updatedPricing);
 
         void Delete(int id);
     }

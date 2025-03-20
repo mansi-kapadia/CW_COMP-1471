@@ -42,11 +42,11 @@
                             </ul>
                         }
 
-                        <!-- Cart Button -->
+                        <!-- Bookings Button -->
                         <div class="ms-auto">
-                            <a class="btn btn-outline-primary position-relative me-3" id="cartButton">
-                                🛒 Cart 
-                                <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <a class="btn btn-outline-success position-relative me-3" id="bookingButton">
+                                My Bookings
+                                <span id="ticketCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                     0
                                 </span>
                             </a>
@@ -78,21 +78,6 @@
         </main>
     </div>
 
-   @* <footer class="border-top footer text-muted">
-        <div class="container">
-            <p>&copy; 2025 - University of Greenwich</p>
-            <p>Created for the "Enterprise Software Engineering Development" module by:</p>
-             <ul class="footer-list">
-                <li>Tugrul Subekci - 001421550</li>
-                <li>Hasan Yasin Yildiz - 001418766</li>
-                <li>Gopala Krishna Kumbha - 001416850</li>
-                <li>Mansi Kapadia - 001432430</li>
-                <li>Shanmukha Sai Kalluri - 001437795</li>
-            </ul>
-            <p><a asp-area="" asp-controller="home" asp-action="privacy">privacy</a></p>
-        </div>
-    </footer>*@
-
     <footer class="border-top footer text-muted">
         <div class="container d-flex justify-content-between align-items-center">
             <p>&copy; 2025 - University of Greenwich</p>
@@ -100,59 +85,57 @@
         </div>
     </footer>
 
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     
     <script>
-        let cartItems = [];
+        let ticketItems = [];
 
-        function updateCartCount() {
-            let totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById("cartCount").innerText = totalCount;
+        function updateTicketCount() {
+            let totalCount = ticketItems.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById("ticketCount").innerText = totalCount;
         }
 
-        function addToCart(PlayId, inputId) {
+        function addToTicket(PlayId, inputId) {
             let quantity = parseInt(document.getElementById(inputId).value) || 1;
         
-            let existingItem = cartItems.find(item => item.playId === PlayId);
+            let existingItem = ticketItems.find(item => item.playId === PlayId);
             if (existingItem) {
                 existingItem.quantity += quantity;
             } else {
-                cartItems.push({ playId: PlayId, quantity });
+                ticketItems.push({ playId: PlayId, quantity });
             }
 
-            updateCartCount();
-            alert(`Added to Cart! Current Items: ${cartItems.length}`);
+            updateTicketCount();
+            alert(`Added to Bookings! Current Items: ${ticketItems.length}`);
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-            // Fetch cart count
-            fetch('/api/bookings/getcartcount', { 
+            // Fetch Ticket count
+            fetch('/api/bookings/getticketcount', { 
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include'
             })
             .then(response => response.json())
             .then(data => {
-                console.log("cartCount" , data);
 
-                let cartCountElement = document.getElementById("cartCount");
+                let countElement = document.getElementById("ticketCount");
 
-                console.log(cartCountElement);
-                cartCountElement.textContent = data || 0;
+                console.log(countElement,data);
+                countElement.textContent = data || 0;
                 if (data.count === 0) {
-                    cartCountElement.style.display = 'none';
+                    countElement.style.display = 'none';
                 }
             })
-            .catch(error => console.error('Error fetching cart count:', error));
+            .catch(error => console.error('Error fetching ticket count:', error));
 
-            // Redirect to Cart Index when the button is clicked
-            document.getElementById("cartButton").addEventListener("click", function (event) {
+            // Redirect to Index when the button is clicked
+            document.getElementById("bookingButton").addEventListener("click", function (event) {
                 event.preventDefault();
         
-                window.location.href = "/api/Cart/"; // Redirect to Cart Index
+                window.location.href = "/api/bookings";
             });
         });
 

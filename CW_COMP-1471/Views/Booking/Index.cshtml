@@ -12,14 +12,16 @@
         {
             foreach (var ticket in Model.Tickets)
             {
-               <div class="col-md-4">
+               <div class="col-md-4 ">
                     <div class="card p-3 mb-3 shadow-sm">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5>@ticket.PlayName</h5>
-                            <button class="btn btn-outline-danger btn-sm delete-ticket-btn" data-id="@ticket.TicketId" onclick="deleteTicket(@ticket.TicketId)">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                       <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 flex-grow-1">@ticket.PlayName</h5>  
+                            <div class="text-end">
+                                <label class="fw-bold d-block">Price:</label>
+                                <p class="mb-0 fs-5">£<span class="ticket-total" data-id="@ticket.TicketId">@ticket.Amount</span></p>
+                            </div>
                         </div>
+
 
                         <p><strong>Seat:</strong> @ticket.SeatNumber</p>
 
@@ -28,22 +30,9 @@
                                 <label class="fw-bold mb-1">Age:</label>
                                 <input type="number" value="@ticket.Age" class="form-control form-control-sm age-input" data-id="@ticket.TicketId">
                             </div>
-
-                            <div class="w-50">
-                                <label class="fw-bold mb-1">Pricing Type:</label>
-                                <select class="form-control form-control-sm pricing-type" data-id="@ticket.TicketId" onchange="updateTotal()">
-                                    @foreach (var pricingType in Model.PricingTypes)
-                                    {
-                                         <option value="@pricingType.PricingId" data-price="@pricingType.Price"
-                                                selected="@(ticket.PricingId == pricingType.PricingId ? "selected" : null)">
-                                                @pricingType.Band - £@pricingType.Price
-                                            </option>
-                                    }
-                                </select>
-                            </div>
                         </div> 
                         
-                         <p class="mt-2"><strong>Price:</strong> £<span class="ticket-total" data-id="@ticket.TicketId">@ticket.Price</span></p>
+                         
                     </div>
                 </div>
 
@@ -93,11 +82,14 @@
         }
     </div>
 
-    <!-- Cart Summary -->
+    <!-- Booking Summary -->
     <div class="mt-4 p-3 border rounded shadow-sm">
-        <h4>Cart Summary</h4>
+        <h4>Summary</h4>
         <p><strong>Subtotal:</strong> £<span id="subtotal">0.0</span></p>
-        <p><strong>Discount:</strong> -£<span id="discountAmount">@Model.Discount.DiscountAmount</span></p>
+         @if (Model.Discount != null)
+         {
+                <p><strong>Discount:</strong> -£<span id="discountAmount">@Model.Discount.DiscountAmount</span></p>
+         }
         <hr>
         <h5><strong>Final Total:</strong> £<span id="finalTotal">0.00</span></h5>
     </div>
@@ -119,46 +111,46 @@
 
     function updateTotal() {
         let subtotal = 0;
+        
+        console.log("updateTotal");
 
-        document.querySelectorAll(".pricing-type").forEach(element => {
-            let ticketId = element.getAttribute("data-id");
-            let price = parseFloat(element.options[element.selectedIndex].getAttribute("data-price")) || 0;
-
-            // update total for this ticket
-            document.querySelector(`.ticket-total[data-id='${ticketId}']`).innertext = price.toFixed(2);
-
-             // Hide delete button if ticket is free
-            let deleteButton = document.querySelector(`.delete-ticket-btn[data-id='${ticketId}']`);
-            if (deleteButton) {
-                deleteButton.style.display = price > 0 ? "inline-block" : "none";
-            }
-
-            // Add to subtotal
+        document.querySelectorAll(".ticket-total").forEach(element => {
+            let price = parseFloat(element.innerText) || 0;
             subtotal += price;
         });
-        
-        discountValue = document.getElementById("discountAmount").innerText;
-        
-        // Recalculate total with discount applied
-        let finalTotal = subtotal - parseFloat(discountValue);
 
-        // Ensure discount is not more than subtotal (prevents negative values)
-        if (finalTotal < 0) {
-            finalTotal = 0;
+        console.log("subtotal", subtotal);
+
+        // Retrieve discount amount safely
+        let discountValue = 0;
+
+        let res = document.getElementById("discountAmount");
+
+        if (res) {
+            discountValue = parseFloat(res.innerText) || 0;
         }
 
+        console.log("discountValue",discountValue);
+
+        // Recalculate total with discount applied
+        let finalTotal = subtotal - discountValue;
+
+        // Ensure discount does not make the total negative
+        finalTotal = Math.max(finalTotal, 0);
+
+        console.log("finalTotal",finalTotal);
+
         // Update displayed values
-        document.getElementById("subtotal").innerText = subtotal.toFixed(2);        
+        document.getElementById("subtotal").innerText = subtotal.toFixed(2);
         document.getElementById("finalTotal").innerText = finalTotal.toFixed(2);
     }
 
     // Attach event listeners for age and pricing selection changes
     function attachEventListeners() {
-        document.querySelectorAll(".age-input, .pricing-type").forEach(element => {
+        document.querySelectorAll(".age-input").forEach(element => {
             element.addEventListener("change", function () {
                 let ticketId = this.getAttribute("data-id");
                 let age = document.querySelector(`.age-input[data-id='${ticketId}']`).value;
-                let pricingId = document.querySelector(`.pricing-type[data-id='${ticketId}']`).value;
 
                 let existingTicket = updatedTickets.find(t => t.ticketId == ticketId);
                 if (existingTicket) {
@@ -175,6 +167,7 @@
 
     // Apply discount and update total
     function applyDiscount() {
+        console.log("applyDiscount");
         let discountCode = document.getElementById("discountCode").value.trim();
         let discountMessage = document.getElementById("discountMessage");
         let bookingId = document.getElementById("bookingId").value;
@@ -186,17 +179,17 @@
             return;
         }
 
-        fetch(`/api/cart/applydiscount`, {
+        fetch(`/api/discount/applydiscount`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ bookingId, discountCode, ages })
         })
         .then(response => response.json())
         .then(data => {
+            console.log("then",data.discountAmount);
             if (data && data.discountAmount) {
-                discountValue = parseFloat(data.discountAmount) || 0; // Store discount value
+                discountValue = parseFloat(data.discountAmount) || 0;
                 updateTotal(); // Recalculate totals with new discount
-
                 discountMessage.innerText = `Discount Applied! You saved £${discountValue.toFixed(2)}.`;
                 discountMessage.style.color = "green";
             } else {
@@ -204,7 +197,6 @@
                 discountMessage.style.color = "red";
             }
         }).catch(error => {
-            console.log(error);
             discountMessage.innerText = "Error checking discount code.";
             discountMessage.style.color = "red";
         });
@@ -212,39 +204,35 @@
 
     // Proceed to checkout
     function proceedToCheckout() {
-    console.log("Updated Tickets:", updatedTickets);
 
-    if (!updatedTickets.length) {
-        if (confirm("No changes detected. Proceed to checkout?")) {
-            window.location.href = "/api/checkout";
-        }
-        return;
-    }
-
-    if (confirm("Are you sure you want to proceed to checkout?")) {
-        fetch('/api/bookings/update-bookings', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tickets: updatedTickets }) 
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("API Response:", data);  // Debugging
-
-            if (data.success && data.bookingId) {
-                alert("Tickets updated! Redirecting to checkout...");
-
-                window.location.href = `/api/checkout`;
-            } else {
-                alert("Failed to update tickets. Please try again.");
+        if (!updatedTickets.length) {
+            if (confirm("No changes detected. Proceed to checkout?")) {
+                window.location.href = "/api/checkout";
             }
-        })
-        .catch(error => {
-            console.error("Error updating tickets:", error);
-            alert("Error updating tickets. Please check your connection.");
-        });
-    }
-}
+            return;
+        }
 
+        if (confirm("Are you sure you want to proceed to checkout?")) {
+            fetch('/api/bookings/update-bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tickets: updatedTickets }) 
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                if (data.success && data.bookingId) {
+                    alert("Tickets updated! Redirecting to checkout...");
+
+                    window.location.href = `/api/checkout`;
+                } else {
+                    alert("Failed to update tickets. Please try again.");
+                }
+            })
+            .catch(error => {
+                alert("Error updating tickets. Please check your connection.");
+            });
+        }
+    }
 
 </script>

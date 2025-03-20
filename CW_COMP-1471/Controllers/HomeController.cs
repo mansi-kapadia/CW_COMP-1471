@@ -15,7 +15,7 @@ namespace CW_COMP_1471.Controllers
         }
 
         private readonly ILogger<HomeController> _logger;
-
+        
         public IActionResult Index()
         {
             var plays = playService.GetAllPlays(); // Fetches list of plays
@@ -27,7 +27,7 @@ namespace CW_COMP_1471.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
+        
         public IActionResult Privacy()
         {
             return View();

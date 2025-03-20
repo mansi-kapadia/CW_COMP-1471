@@ -2,8 +2,6 @@
 using CW_COMP_1471.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
-//namespace CW_COMP_1471.Controllers
-//{
 
 [ApiController]
 [Route("api/Checkout")]
@@ -17,6 +15,7 @@ public class CheckoutController : Controller
         _cartService = cartService;
     }
 
+    // Show checkout page 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
@@ -38,29 +37,42 @@ public class CheckoutController : Controller
         return View(booking);
     }
 
+    // store payment details
     [HttpPost("ProcessPayment")]
-    public async Task<IActionResult> ProcessPayment([FromBody] CheckoutCart checkoutData)
+    public async Task<IActionResult> ProcessPayment(CheckoutCart checkoutData)
     {
-        if (checkoutData == null || string.IsNullOrEmpty(checkoutData.CreditCardNumber))
+        try
         {
-            return BadRequest(new { success = false, message = "Invalid payment details." });
+            if (checkoutData == null || string.IsNullOrEmpty(checkoutData.CreditCardNumber))
+            {
+                return BadRequest(new { success = false, message = "Invalid payment details." });
+            }
+
+            var payment = await _cartService.CheckoutCart(checkoutData);
+
+            if (payment == null)
+            {
+                return StatusCode(500, new { success = false, message = "Payment processing failed." });
+            }
+
+            return Ok(new
+            {
+                success = true,
+                message = "Payment successful!",
+                paymentId = payment.PaymentId,
+                redirectUrl = $"/OrderConfirmation?paymentReferenceNumber={payment.PaymentReferenceNumber.ToString()}"
+            });
+
         }
-
-        var payment = await _cartService.CheckoutCart(checkoutData);
-
-        if (payment == null)
+        catch (Exception ex)
         {
-            return StatusCode(500, new { success = false, message = "Payment processing failed." });
+            return Ok(new
+            {
+                success = true,
+                message = ex.Message,
+                paymentId = 0,                
+            });
         }
-
-        return Ok(new
-        {
-            success = true,
-            message = "Payment successful!",
-            paymentId = payment.PaymentId,
-            redirectUrl = $"/OrderConfirmation?PaymentReferenceNumber={payment.PaymentReferenceNumber}"
-        });
     }
 
 }
-//}

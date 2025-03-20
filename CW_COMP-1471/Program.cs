@@ -20,14 +20,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// ?? Register Services
+// Register Services using Dependency Inejction Pattern
+builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
 builder.Services.AddScoped<IPackageService, PackageService>();
 builder.Services.AddScoped<IPlayService, PlayService>();
 builder.Services.AddScoped<IPricingService, PricingService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ICartService, CartService>();
 
 // Enable Session Services

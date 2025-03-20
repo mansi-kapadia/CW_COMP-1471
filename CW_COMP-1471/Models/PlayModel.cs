@@ -23,7 +23,13 @@ namespace CW_COMP_1471.Models
 
         [Column("imageurl")]
         public string? ImageUrl { get; set; }
-       
+
+        [NotMapped]
+        public IEnumerable<Review> Reviews { get; set; }
+
+        [NotMapped]
+        public IEnumerable<PricingBand> PricingBands { get; set; }
+
     }
 
 }

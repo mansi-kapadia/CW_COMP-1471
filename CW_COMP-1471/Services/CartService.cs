@@ -30,7 +30,7 @@ public class CartService : ICartService
         {
             booking.Tickets = await _context.Tickets
                         .Include(t => t.Play)
-                        .Include(t => t.Pricing)
+                        //.Include(t => t.Pricing)
                         .Where(t => t.BookingId == booking.BookingId)
                         .Select(t => new TicketModel
                         {
@@ -38,18 +38,16 @@ public class CartService : ICartService
                             PlayName = t.Play != null ? t.Play.Title : "",
                             SeatNumber = t.SeatNumber,
                             Age = t.Age,
-                            PricingType = t.Pricing != null ? t.Pricing.Band : "",
-                            PricingId = t.PricingId,
-                            Price = t.Pricing != null ? t.Pricing.Price : 0,
+                            Amount = t.Amount,
                             PlayId = t.PlayId
                         }).ToListAsync();
 
-            var discount = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountId == booking.DiscountId);
+            //var discount = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountId == booking.DiscountId);
             var package = await _context.Packages.FirstOrDefaultAsync(x => x.PackageId == booking.PackageId);
 
             newCart.BookingId = booking.BookingId;
             newCart.Tickets = booking.Tickets;
-            newCart.Discount = discount;
+            //newCart.Discount = discount;
             newCart.Package = package;
         }
 
@@ -101,14 +99,13 @@ public class CartService : ICartService
             if (updatedTicket != null)
             {
                 ticket.Age = updatedTicket.Age;
-                ticket.PricingId = updatedTicket.PricingId;
             }
         }
 
         // update booking Status
         Booking booking = await _context.Bookings.FirstOrDefaultAsync(x => x.BookingId == dbTickets.FirstOrDefault().BookingId);
 
-        booking.Amount = dbTickets.Sum(x => x.Pricing != null ? (decimal)x.Pricing.Price : 0.0m)
+        booking.Amount = dbTickets.Sum(x => x.Amount)
                - (booking.Discount?.DiscountAmount ?? 0.0m);
         booking.PaymentStatus = "In Prog";
         await _context.SaveChangesAsync();
@@ -139,7 +136,7 @@ public class CartService : ICartService
             PaymentReferenceNumber = Guid.NewGuid(),
             CardNumber = checkout.CreditCardNumber,
             ExpiryDate = checkout.ExpiryDate,
-            CVV = "XXX",
+            CVV = checkout.CVV,
             PaymentDate = DateTime.UtcNow
         };
 

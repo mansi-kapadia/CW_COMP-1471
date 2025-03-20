@@ -37,11 +37,28 @@
     </div>
 
     <!-- Total Amount -->
-    <div class="total-amount text-center">
-        <h4>Subtotal: £<span id="subtotal">@(Model.Amount + (Model.Discount?.DiscountAmount ?? 0.00))</span></h4>
-        <h4>Discount: -£<span id="discount">@Model.Discount?.DiscountAmount ?? 0.00</span></h4>
+    <div class="mt-4 p-3 border rounded shadow-sm bg-light">
+        <h4 class="mb-3 text-center">Summary</h4>
+    
+        <div class="d-flex justify-content-between">
+            <p><strong>Subtotal:</strong></p>
+            <p>£<span id="subtotal">@(Model.Amount + (Model.Discount?.DiscountAmount ?? 0.00m))</span></p>
+        </div>
+
+        @if (Model.Discount != null)
+        {
+            <div class="d-flex justify-content-between text-danger">
+                <p><strong>Discount:</strong></p>
+                <p>-£<span id="discountAmount">@Model.Discount.DiscountAmount</span></p>
+            </div>
+        }
+
         <hr>
-        <h4><strong>Final Total:</strong> £<span id="totalAmount">@Model.Amount</span></h4>
+
+        <div class="d-flex justify-content-between">
+            <h5><strong>Final Total:</strong></h5>
+            <h5>£<span id="finalTotal">@Model.Amount</span></h5>
+        </div>
     </div>
 
 
@@ -58,9 +75,11 @@
         let cardholderName = document.getElementById("cardholderName").value.trim();
         let cardNumber = document.getElementById("cardNumber").value.replace(/\s/g, "");
         let expiryDate = document.getElementById("expiryDate").value.trim();
-        let cvv = document.getElementById("cvv").value.trim();
-        let totalAmount = parseFloat(document.getElementById("totalAmount").innerText);
-        let discount = parseFloat(document.getElementById("discount").innerText);
+        let cvv = document.getElementById("cvv").value.trim();        
+        let discount = 0;
+        if(document.getElementById("discountAmount")){
+            parseFloat(document.getElementById("discountAmount").innerText);
+        }
         let bookingId =  document.getElementById("bookingId").value;
 
         // Simple validation
@@ -84,7 +103,7 @@
             return;
         }
 
-       fetch(`/api/checkout/ProcessPayment`, { 
+       fetch(`/api/Checkout/ProcessPayment`, { 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -97,6 +116,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    console.log("data",data);
                     alert("Payment successful! Redirecting to Order Confirmation...");
                     window.location.href = `/OrderConfirmation?paymentReferenceNumber=${data.paymentReferenceNumber}`;
                 } else {
@@ -116,7 +136,6 @@
     });
 
     function updateCardDisplay() {
-    console.log("Updating card display...");
 
     // Get input values
     let cardNumber = document.getElementById("cardNumber").value;
