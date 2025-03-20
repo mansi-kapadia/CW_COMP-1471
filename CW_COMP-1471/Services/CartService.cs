@@ -112,7 +112,6 @@ public class CartService : ICartService
         return true;
     }
 
-
     public async Task<Payment> CheckoutCart(CheckoutCart checkout)
     {
         // Get the booking based on BookingId

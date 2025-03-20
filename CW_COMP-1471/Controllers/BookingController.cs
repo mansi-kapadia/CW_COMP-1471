@@ -23,7 +23,7 @@ namespace CW_COMP_1471.Controllers
 
         // add new booking
         [HttpPost]
-        public async Task<IActionResult> AddToCart([FromBody] AddBookingModel booking)
+        public async Task<IActionResult> AddToBooking([FromBody] AddBookingModel booking)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace CW_COMP_1471.Controllers
                     return BadRequest(new { message = "Invalid booking details." });
                 }
 
-                int TicketCount = await _bookingService.AddToCart(booking);
+                int TicketCount = await _bookingService.AddToBooking(booking);
                 return Ok(new { result = TicketCount, message = TicketCount + " tickets added to cart successfully!" });
             }
             catch (Exception ex)

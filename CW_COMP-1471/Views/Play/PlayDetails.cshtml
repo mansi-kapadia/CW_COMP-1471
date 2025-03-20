@@ -1,0 +1,89 @@
+﻿@model Play
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container create-edit-form">
+    <h1>@Model.Title</h1>
+    <img src="@Model.ImageUrl" style="height:200px"/>
+    <p><strong>Genre:</strong> @Model.Genre</p>
+    <p><strong>Date:</strong> @Model.Dateandtime.ToString("yyyy-MM-dd HH:mm")</p>
+    <p>@Model.Description</p>
+    <p>@Model.PlayType</p>
+
+    <hr>
+
+    <h2>Reviews</h2>
+
+    @if (Model.Reviews.Any())
+    {
+        <ul>
+            @foreach (var review in Model.Reviews)
+            {
+                <li>
+                    <strong>@review.ReviewerName</strong> - ⭐ @review.Rating / 5
+                    <p>@review.Comment</p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No reviews yet. Be the first to review!</p>
+    }
+
+    <!-- Add Review Button -->
+    <button id="showReviewForm" class="btn btn-primary mt-3">Add Review</button>
+
+</div>
+
+<!-- Hidden Review Form -->
+<div id="reviewForm" class="container create-edit-form">
+    <h3>Add a Review</h3>
+    <form asp-action="AddReview" asp-controller="Review" method="post">
+        <input type="hidden" name="PlayId" value="@Model.PlayId" />
+
+        <div class="mb-3">
+                <label for="PaymentRefNumber" class="form-label">Payment Reference Number:</label>
+                <input type="text" class="form-control" name="PaymentRefNumber" placeholder="Add your payment reference number" required />
+         </div>
+
+        <div class="mb-3">
+            <label for="Comment" class="form-label">Your Review:</label>
+            <textarea class="form-control" name="Comment" rows="3" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="Rating" class="form-label">Rating:</label>
+            <select class="form-select" name="Rating">
+                <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
+                <option value="4">⭐️⭐️⭐️⭐️</option>
+                <option value="3">⭐️⭐️⭐️</option>
+                <option value="2">⭐️⭐️</option>
+                <option value="1">⭐️</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit Review</button>
+        <button type="button" id="cancelReviewForm" class="btn btn-secondary">Cancel</button>
+    </form>
+    @if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+</div>
+
+<script>
+    document.getElementById("showReviewForm").addEventListener("click", function() {
+        document.getElementById("reviewForm").style.display = "block";
+        this.style.display = "none";
+    });
+
+    document.getElementById("cancelReviewForm").addEventListener("click", function() {
+        document.getElementById("reviewForm").style.display = "none";
+        document.getElementById("showReviewForm").style.display = "block";
+    });
+</script>

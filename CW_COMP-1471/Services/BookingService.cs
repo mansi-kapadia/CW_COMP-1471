@@ -14,7 +14,7 @@ namespace CW_COMP_1471.Services
         }
 
         // Add Ticket To Cart
-        public async Task<int> AddToCart(AddBookingModel bookingModel)
+        public async Task<int> AddToBooking(AddBookingModel bookingModel)
         {
             var existingBooking = await _context.Bookings
                 .FirstOrDefaultAsync(b => b.UserId == bookingModel.UserId && !b.FinalCheckout);

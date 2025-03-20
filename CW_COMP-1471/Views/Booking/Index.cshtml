@@ -4,10 +4,10 @@
 }
 
 <div class="container mt-5">
-    <h2>Your Cart</h2>
+    <h2>Your Bookings</h2>
     <input type="hidden" id="bookingId" value="@Model.BookingId" />
     
-    <div id="cartItems" class="row">
+    <div id="tickets" class="row">
         @if (Model != null && Model.Tickets != null)
         {
             foreach (var ticket in Model.Tickets)

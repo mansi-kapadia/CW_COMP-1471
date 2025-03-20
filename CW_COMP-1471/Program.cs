@@ -29,6 +29,7 @@ builder.Services.AddScoped<IPricingService, PricingService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 // Enable Session Services
 builder.Services.AddDistributedMemoryCache();

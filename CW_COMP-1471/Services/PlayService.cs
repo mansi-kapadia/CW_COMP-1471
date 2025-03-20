@@ -77,5 +77,12 @@ namespace CW_COMP_1471.Services
                 _context.SaveChanges();
             }
         }
+
+        public Play GetPlayDetails(int PlayId)
+        {
+            var play = _context.Plays.FirstOrDefault(x => x.PlayId == PlayId);
+            if (play != null) play.Reviews = _context.Reviews.Where(x => x.PlayId == PlayId).ToList();
+            return play;
+        }
     }
 }

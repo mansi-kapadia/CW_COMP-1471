@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CW_COMP_1471.Controllers
 {
-
     public class ReviewController : Controller
     {
         public readonly IReviewService _reviewService;
@@ -14,17 +13,22 @@ namespace CW_COMP_1471.Controllers
             _reviewService = reviewService;
         }
 
-        // get reviews by play id
-        public IActionResult Index(int PlayId)
-        {
-            ViewBag.PlayId = PlayId;
-            return View();
-        }
-
         // save reviews
-        public async Task PostReviewAsync(PostReviewModel postReview)
+        [HttpPost]
+        public async Task<IActionResult> AddReview([FromForm] PostReviewModel postReview)
         {
-            await _reviewService.PostReview(postReview);
+            try
+            {
+                int userId = (int)HttpContext.Session.GetInt32("LoggedInUser");
+                postReview.ReviewerId = userId;
+                await _reviewService.PostReview(postReview);
+                return Redirect($"/api/play/Playdetails/{postReview.PlayId}");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return Redirect($"/api/play/Playdetails/{postReview.PlayId}");
+            }
         }
     }
 }

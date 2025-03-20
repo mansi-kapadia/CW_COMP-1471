@@ -15,6 +15,22 @@ namespace CW_COMP_1471.Services
 
         public async Task PostReview(PostReviewModel postReview)
         {
+
+            Guid paymentRefGuid;
+            if (!Guid.TryParse(postReview.PaymentRefNumber, out paymentRefGuid))
+            {
+                throw new Exception($"Invalid Payment Reference Number: {postReview.PaymentRefNumber}");
+            }
+
+            Payment payment = await _context.Payments
+                .Include(x => x.Booking)
+                .FirstOrDefaultAsync(x => x.PaymentReferenceNumber == paymentRefGuid);
+
+            if (payment.Booking.Tickets.Any(x => x.UserId == postReview.ReviewerId))
+            {
+                throw new Exception($"Invalid Payment Reference Number: {postReview.PaymentRefNumber}");
+            }
+
             User reviewer = await _context.Users.FirstOrDefaultAsync(x => x.Id == postReview.ReviewerId);
             
             Review review = new Review{
@@ -22,10 +38,17 @@ namespace CW_COMP_1471.Services
                 PlayId = postReview.PlayId,
                 Rating = postReview.Rating,
                 Comment = postReview.Comment,
-                ReviewDate = DateTime.Now,
+                ReviewDate = DateTime.UtcNow,
+                ReviewerId = postReview.ReviewerId ?? 0,
             };
 
-            _context.SaveChangesAsync();
+            await _context.Reviews.AddAsync(review);
+            int rowsAffected = await _context.SaveChangesAsync();
+
+            if (rowsAffected == 0)
+            {
+                throw new Exception("Failed to save the review.");
+            }
         }
     }
 }

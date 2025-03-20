@@ -16,6 +16,8 @@ namespace CW_COMP_1471.Services
         void Update(Play play);
 
         void DeletePlay(int id);
-        
+
+        Play GetPlayDetails(int PlayId);
+
     }
 }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CW_COMP_1471.Controllers
 {
+    [ApiController]
+    [Route("api/play")]
     public class PlayController : Controller
     {
         private static IPlayService playService;
@@ -21,6 +23,7 @@ namespace CW_COMP_1471.Controllers
         }
 
         // Show Add Play Form
+        [HttpGet("Create")]
         public ActionResult CreatePlay()
         {
             return View();
@@ -28,8 +31,8 @@ namespace CW_COMP_1471.Controllers
 
 
         // save a new play
-        [HttpPost]
-        public ActionResult Create(Play Play)
+        [HttpPost("Create")]
+        public ActionResult Create([FromForm]Play Play)
         {
             if (!ModelState.IsValid)
             {
@@ -45,6 +48,7 @@ namespace CW_COMP_1471.Controllers
         }
 
         // open edit play page 
+        [HttpGet("Edit")]
         public ActionResult EditPlay(int id)
         {
             var Play = playService.GetById(id);
@@ -60,8 +64,8 @@ namespace CW_COMP_1471.Controllers
         }
 
         // save updated play details
-        [HttpPost]
-        public ActionResult Edit(Play Play)
+        [HttpPost("Edit")]
+        public ActionResult Edit([FromForm] Play Play)
         {
             if (!ModelState.IsValid)
             {
@@ -76,10 +80,18 @@ namespace CW_COMP_1471.Controllers
         }
 
         //delete play by id
+        [HttpGet("Delete/{id}")]
         public ActionResult Delete(int id)
         {
             playService.DeletePlay(id);
             return RedirectToAction("Index");
+        }
+
+        [HttpGet("PlayDetails/{PlayId}")]
+        public ActionResult PlayDetails(int PlayId)
+        {
+            var model = playService.GetPlayDetails(PlayId);
+            return View(model);
         }
     }
 }
