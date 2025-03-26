@@ -35,7 +35,7 @@ namespace CW_COMP_1471.Controllers
                 }
 
                 int TicketCount = await _bookingService.AddToBooking(booking);
-                return Ok(new { result = TicketCount, message = TicketCount + " tickets added to cart successfully!" });
+                return Ok(new { result = TicketCount, message = TicketCount + " tickets added to Booking successfully!" });
             }
             catch (Exception ex)
             {

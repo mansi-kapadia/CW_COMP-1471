@@ -86,10 +86,14 @@
     <div class="mt-4 p-3 border rounded shadow-sm">
         <h4>Summary</h4>
         <p><strong>Subtotal:</strong> £<span id="subtotal">0.0</span></p>
-         @if (Model.Discount != null)
+        @if (Model.Discount != null)
          {
-                <p><strong>Discount:</strong> -£<span id="discountAmount">@Model.Discount.DiscountAmount</span></p>
-         }
+            <p><strong>Discount:</strong> -£<span id="discountAmount">@Model.Discount.DiscountAmount</span></p>
+        }
+        else
+        {
+            <p><strong>Discount:</strong> -£<span id="discountAmount">0</span></p>
+        }
         <hr>
         <h5><strong>Final Total:</strong> £<span id="finalTotal">0.00</span></h5>
     </div>
@@ -105,11 +109,11 @@
     let discountValue = 0; 
 
     window.onload = function () {
-        updateTotal(); 
+        updateTotal(0); 
         attachEventListeners();
     };
 
-    function updateTotal() {
+    function updateTotal(discount) {
         let subtotal = 0;
         
         console.log("updateTotal");
@@ -119,21 +123,12 @@
             subtotal += price;
         });
 
-        console.log("subtotal", subtotal);
+        console.log("subtotal", subtotal);        
 
-        // Retrieve discount amount safely
-        let discountValue = 0;
-
-        let res = document.getElementById("discountAmount");
-
-        if (res) {
-            discountValue = parseFloat(res.innerText) || 0;
-        }
-
-        console.log("discountValue",discountValue);
+        console.log("discountValue",discount);
 
         // Recalculate total with discount applied
-        let finalTotal = subtotal - discountValue;
+        let finalTotal = subtotal - discount;
 
         // Ensure discount does not make the total negative
         finalTotal = Math.max(finalTotal, 0);
@@ -160,7 +155,7 @@
                     updatedTickets.push({ ticketId, age, pricingId });
                 }
 
-                updateTotal();
+                updateTotal(0);
             });
         });
     }
@@ -168,6 +163,7 @@
     // Apply discount and update total
     function applyDiscount() {
         console.log("applyDiscount");
+        let discountAmount = document.getElementById("discountAmount");
         let discountCode = document.getElementById("discountCode").value.trim();
         let discountMessage = document.getElementById("discountMessage");
         let bookingId = document.getElementById("bookingId").value;
@@ -178,6 +174,7 @@
             discountMessage.style.color = "red";
             return;
         }
+        
 
         fetch(`/api/discount/applydiscount`, {
             method: 'POST',
@@ -185,18 +182,28 @@
             body: JSON.stringify({ bookingId, discountCode, ages })
         })
         .then(response => response.json())
-        .then(data => {
-            console.log("then",data.discountAmount);
-            if (data && data.discountAmount) {
+        .then(data => {            
+            console.log("then",data)
+                        
+            if (data && data.discountAmount) {                                  
                 discountValue = parseFloat(data.discountAmount) || 0;
-                updateTotal(); // Recalculate totals with new discount
-                discountMessage.innerText = `Discount Applied! You saved £${discountValue.toFixed(2)}.`;
-                discountMessage.style.color = "green";
-            } else {
-                discountMessage.innerText = data.errorMessage || "Invalid Discount Code.";
-                discountMessage.style.color = "red";
+                updateTotal(discountValue); // Recalculate totals with new discount                                
+                if(discountMessage)
+                {                                      
+                    discountMessage.innerText = "";                    
+                    discountMessage.innerText = `Discount Applied! You saved £${discountValue.toFixed(2)}.`;
+                    discountMessage.style.color = "green";
+                    if(discountValue > 0 && discountAmount) discountAmount.innerText = `${discountValue.toFixed(2)}`;
+                }                
+            } else {                
+                if(discountMessage)
+                {
+                    discountMessage.innerText = data.errorMessage || "Invalid Discount Code.";
+                    discountMessage.style.color = "red";
+                }
             }
         }).catch(error => {
+            console.log("catch" , error)
             discountMessage.innerText = "Error checking discount code.";
             discountMessage.style.color = "red";
         });
