@@ -22,7 +22,13 @@
             @foreach (var review in Model.Reviews)
             {
                 <li>
-                    <strong>@review.ReviewerName</strong> - ⭐ @review.Rating / 5
+                    <strong>
+                        @review.ReviewerName
+                        @if (review.IsVerifiedBuyer)
+                        {
+                            <span style="color: green; font-size: 0.9em;">✔ Verified Buyer</span>
+                        }
+                    </strong> - ⭐ @review.Rating / 5
                     <p>@review.Comment</p>
                 </li>
             }
@@ -34,19 +40,19 @@
     }
 
     <!-- Add Review Button -->
-    <button id="showReviewForm" class="btn btn-primary mt-3">Add Review</button>
+    <button id="showReviewForm" class="btn btn-success mt-3">Add Review</button>
 
 </div>
 
 <!-- Hidden Review Form -->
-<div id="reviewForm" class="container create-edit-form">
+<div id="reviewForm" class="container create-edit-form" style="display: none;">
     <h3>Add a Review</h3>
     <form asp-action="AddReview" asp-controller="Review" method="post">
         <input type="hidden" name="PlayId" value="@Model.PlayId" />
 
         <div class="mb-3">
                 <label for="PaymentRefNumber" class="form-label">Payment Reference Number:</label>
-                <input type="text" class="form-control" name="PaymentRefNumber" placeholder="Add your payment reference number" required />
+                <input type="text" class="form-control" name="PaymentRefNumber" placeholder="Add your payment reference number"/>
          </div>
 
         <div class="mb-3">

@@ -33,20 +33,20 @@
 
                         @if (AccountController.IsUserLoggedIn(Context))
                         {
-                            <div class="d-flex justify-content-between align-items-center mt-3">
+                           <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div class="input-group" style="width: 120px;">
                                     <button class="btn btn-outline-secondary" type="button" onclick="decrement(@play.PlayId)">-</button>
                                     <input type="text" id="ticketCount-@play.PlayId" class="form-control text-center" value="1" readonly />
                                     <button class="btn btn-outline-success" type="button" onclick="increment(@play.PlayId)">+</button>
                                 </div>
-                                <button class="btn btn-success" onclick="addToBooking(@play.PlayId)">Add to Booking</button>
+                                <button class="btn btn-success" onclick="addToBooking(@play.PlayId)">Add</button>
                                 
                               <a href="/api/play/Playdetails/@play.PlayId" class="btn btn-success">
-                                    View Details
+                                    View
                                 </a>
                             </div>
                         }
-                        
+
                     </div>
                 </div>
             </div>

@@ -37,6 +37,9 @@ namespace CW_COMP_1471.Models
 
         [Column("reviewdate")]
         public DateTime ReviewDate { get; set; } = DateTime.UtcNow;
+
+        [Column("isverifiedbuyer")]
+        public bool IsVerifiedBuyer { get; set; }
     }
 
     public class PostReviewModel
@@ -52,8 +55,7 @@ namespace CW_COMP_1471.Models
         public int Rating { get; set; }
 
         public int? ReviewerId { get; set; }
-
-        [Required]
+        
         public string PaymentRefNumber { get; set; }
     }
 }

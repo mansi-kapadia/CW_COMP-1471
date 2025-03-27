@@ -17,18 +17,16 @@ namespace CW_COMP_1471.Services
         {
 
             Guid paymentRefGuid;
-            if (!Guid.TryParse(postReview.PaymentRefNumber, out paymentRefGuid))
-            {
-                throw new Exception($"Invalid Payment Reference Number: {postReview.PaymentRefNumber}");
-            }
+            bool IsVerifiedBuyer = false;
+            Guid.TryParse(postReview.PaymentRefNumber, out paymentRefGuid);
 
             Payment payment = await _context.Payments
-                .Include(x => x.Booking)
+                .Include(x => x.Booking).ThenInclude(x => x.Tickets)
                 .FirstOrDefaultAsync(x => x.PaymentReferenceNumber == paymentRefGuid);
-
-            if (payment.Booking.Tickets.Any(x => x.UserId == postReview.ReviewerId))
+            
+            if (payment?.Booking?.Tickets != null && payment.Booking.Tickets.Any(x => x.UserId == postReview.ReviewerId))
             {
-                throw new Exception($"Invalid Payment Reference Number: {postReview.PaymentRefNumber}");
+                IsVerifiedBuyer = true;
             }
 
             User reviewer = await _context.Users.FirstOrDefaultAsync(x => x.Id == postReview.ReviewerId);
@@ -40,6 +38,7 @@ namespace CW_COMP_1471.Services
                 Comment = postReview.Comment,
                 ReviewDate = DateTime.UtcNow,
                 ReviewerId = postReview.ReviewerId ?? 0,
+                IsVerifiedBuyer = IsVerifiedBuyer
             };
 
             await _context.Reviews.AddAsync(review);
