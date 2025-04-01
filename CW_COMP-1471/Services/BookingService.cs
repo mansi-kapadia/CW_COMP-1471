@@ -53,28 +53,31 @@ namespace CW_COMP_1471.Services
 
             int ticketCount = existingTicketCount + bookingModel.Quantity;
 
-            Package package = await _context.Packages.Where(x => x.MinTicketQty <= ticketCount).OrderByDescending(x => x.FreeTicketCount).ThenByDescending(x => x.MinTicketQty).FirstOrDefaultAsync(); 
-
-            if (package != null)
+            if (existingBooking.PackageId == null)
             {
-                PricingBand pricing = await _context.Pricings.FirstOrDefaultAsync(x => x.Price == 0);
+                Package package = await _context.Packages.Where(x => x.MinTicketQty == ticketCount).OrderByDescending(x => x.FreeTicketCount).ThenByDescending(x => x.MinTicketQty).FirstOrDefaultAsync();
 
-                for (int i = 0; i < package.FreeTicketCount; i++)
+                if (package != null)
                 {
-                    tickets.Add(new Ticket
-                    {
-                        BookingId = existingBooking.BookingId,
-                        UserId = bookingModel.UserId,
-                        Age = 18,
-                        Status = "Selected",
-                        PlayId = bookingModel.PlayId,
-                        SeatNumber = $"A{existingTicketCount + i + 1}", // Generate Ticket Number 
-                        Amount = 0 // price is 0 for free tickets
-                    });
-                }
+                    PricingBand pricing = await _context.Pricings.FirstOrDefaultAsync(x => x.Price == 0);
 
-                existingBooking.PackageId = package.PackageId;
-                await _context.SaveChangesAsync();
+                    for (int i = 0; i < package.FreeTicketCount; i++)
+                    {
+                        tickets.Add(new Ticket
+                        {
+                            BookingId = existingBooking.BookingId,
+                            UserId = bookingModel.UserId,
+                            Age = 18,
+                            Status = "Selected",
+                            PlayId = bookingModel.PlayId,
+                            SeatNumber = $"A{existingTicketCount + i + 1}", // Generate Ticket Number 
+                            Amount = 0 // price is 0 for free tickets
+                        });
+                    }
+
+                    existingBooking.PackageId = package.PackageId;
+                    await _context.SaveChangesAsync();
+                }
             }
 
             _context.Tickets.AddRange(tickets);

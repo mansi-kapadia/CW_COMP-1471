@@ -60,9 +60,17 @@ namespace CW_COMP_1471.Services
         // Delete a user
         public void DeleteUser(int id)
         {
-            var user = _context.Users.Find(id);
+            var user = _context.Users.Find(id);            
             if (user != null)
             {
+
+                var reviews = _context.Reviews.Where(x => x.ReviewerId == id).ToList();
+
+                if (reviews.Any())
+                {
+                    _context.Reviews.RemoveRange(reviews);
+                }
+
                 _context.Users.Remove(user);
                 _context.SaveChanges();
             }

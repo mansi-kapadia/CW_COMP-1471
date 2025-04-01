@@ -17,7 +17,7 @@
                     <div class="card-body">
                         <h5 class="card-title">@play.Title</h5>
                         <h6 class="card-subtitle text-muted">@play.Genre</h6>
-                        <p class="card-text mt-2">@play.Description</p>
+                        @*<p class="card-text mt-2">@play.Description</p>*@
                         <p><strong>Date & Time:</strong> @play.Dateandtime.ToString("dd-MM-yyyy hh:mm tt")</p>
                         <p><strong>Play Type:</strong> @play.PlayType</p>
 
@@ -26,7 +26,7 @@
                             <select class="form-select" id="pricingBand-@play.PlayId">
                                 @foreach (var band in play.PricingBands)
                                 {
-                                    <option value="@band.Price">@band.Band - @band.Price.ToString("C")</option>
+                                    <option value="@band.Price">@band.Band - @band.Price.ToString("C",new System.Globalization.CultureInfo("en-GB"))</option>
                                 }
                             </select>
                         </div>
